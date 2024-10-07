@@ -1,0 +1,42 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+@font-face {
+  font-family: Europa;
+  src: url("./components/Fonts//f_Europa-Bold/Europa-Bold.ttf");
+  src: url("./components/Fonts//f_Europa-Bold/Europa-Bold.woff");
+  src: url("./components/Fonts//f_Europa-Bold/Europa-Bold.woff2");
+}
+
+@font-face {
+  font-family: Europa_reg;
+  src: url("./components/Fonts/f-Europa-reg/Europa-Regular.ttf");
+  src: url("./components/Fonts/f-Europa-reg/Europa-Regular.woff");
+  src: url("./components/Fonts/f-Europa-reg/Europa-Regular.woff2");
+}
+
+@font-face {
+  font-family: SegoeUI;
+  src: url("./components/Fonts/Segoe_UI/SegoeUIThis.ttf");
+  src: url("./components/Fonts/Segoe_UI/SegoeUIThis.woff");
+  src: url("./components/Fonts/Segoe_UI/SegoeUIThis.woff2");
+}
+
+.inter {
+  font-family: "Inter", sans-serif;
+}
+
+.Europa_Bold {
+  font-family: Europa;
+}
+
+.Europa_Reg {
+  font-family: Europa_reg;
+}
+
+.SegoeUI {
+  font-family: SegoeUI;
+}

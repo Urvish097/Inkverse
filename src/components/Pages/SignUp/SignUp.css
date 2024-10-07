@@ -1,0 +1,121 @@
+.signup .input_main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.signup .user_input {
+    border-color: #656ED3;
+    border-radius: 50px;
+    width: 367px;
+    height: 37px;
+    background-color: #EBEFFF;
+}
+
+.bgs {
+    background-color: #EBEFFF;
+    padding-bottom: 25px;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.signup .comimage {
+    margin-top: -54px;
+}
+
+.signup .signup_btn {
+    background-color: #656ED3;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 19.36px;
+    padding: 7px 145px 7px 145px;
+    border-radius: 30px;
+}
+
+.signup .password-input-container {
+    position: relative;
+    width: 100%;
+}
+
+.signup .password-input-container input {
+    padding-right: 40px;
+}
+
+.signup .password-icon {
+    position: absolute;
+    top: 40%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #555;
+    /* Adjust the color as needed */
+}
+
+.signup .password-icon:hover {
+    color: #000;
+    /* Darker color on hover */
+}
+
+
+@media (max-width:992px) {
+    .signup .comimage img {
+        display: none;
+    }
+}
+
+@media (max-width:420px) {
+
+    .input_main {
+        align-items: normal;
+    }
+
+    .signup .signup_btn {
+        padding: 0;
+        width: 100%;
+        height: 35px;
+    }
+
+    .signup .user_input {
+        width: 100%;
+    }
+
+    .signup .input_main {
+        align-items: normal;
+    }
+}
+
+.loader-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.7);
+    /* semi-transparent background */
+    z-index: 9999;
+    /* Make sure loader is on top */
+}
+
+.loader {
+    border: 6px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 6px solid #3498db;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

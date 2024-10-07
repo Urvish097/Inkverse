@@ -1,0 +1,251 @@
+/* Postcard.css */
+
+.postcard-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.postcard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.15);
+}
+
+.postcard-image-container {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+}
+
+.postcard-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.postcard-card:hover .postcard-image {
+    transform: scale(1.05);
+}
+
+.postcard-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s ease;
+}
+
+.postcard-card:hover .postcard-overlay {
+    opacity: 1;
+}
+
+.postcard-view-btn {
+    background-color: #ffffff;
+    color: #333333;
+    padding: 10px 20px;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.postcard-view-btn:hover {
+    background-color: #333333;
+    color: #ffffff;
+}
+
+.postcard-content {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.postcard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.postcard-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.postcard-user-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.postcard-user-placeholder {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #6C757D;
+}
+
+.postcard-username {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.postcard-date {
+    font-size: 14px;
+    color: #6C757D;
+}
+
+.postcard-share {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    color: #6C757D;
+    gap: 5px;
+}
+
+.share-icon {
+    font-size: 20px;
+}
+
+.postcard-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 10px 0;
+    color: #333333;
+    min-height: 60px;
+}
+
+.postcard-description {
+    font-size: 16px;
+    color: #555555;
+    line-height: 1.6;
+    max-height: 4.8em; 
+    overflow: hidden;
+    position: relative;
+    transition: max-height 0.3s ease;
+}
+
+.postcard-description.expanded {
+    max-height: none;
+}
+
+.read-more-btn {
+    background: none;
+    border: none;
+    color: #007BFF;
+    cursor: pointer;
+    padding: 0;
+    margin-top: 5px;
+    font-size: 16px;
+    align-self: flex-start;
+    transition: color 0.3s ease;
+}
+
+.read-more-btn:hover {
+    color: #0056b3;
+}
+
+.postcard-footer {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.postcard-likes {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    color: #555555;
+}
+
+.like-icon {
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.like-icon .liked {
+    color: #e74c3c;
+}
+
+.like-icon:hover {
+    color: #e74c3c;
+}
+
+@media (max-width: 768px) {
+    .postcard-card {
+        flex-direction: column;
+    }
+
+    .postcard-image-container {
+        height: 200px;
+    }
+
+    .postcard-title {
+        font-size: 20px;
+    }
+
+    .postcard-description {
+        font-size: 14px;
+    }
+
+    .postcard-username {
+        font-size: 16px;
+    }
+
+    .postcard-date,
+    .postcard-share {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 420px) {
+    .postcard-image-container {
+        height: 150px;
+    }
+
+    .postcard-title {
+        font-size: 18px;
+    }
+
+    .postcard-description {
+        font-size: 14px;
+    }
+
+    .postcard-username {
+        font-size: 14px;
+    }
+
+    .postcard-date,
+    .postcard-share {
+        font-size: 12px;
+    }
+
+    .read-more-btn {
+        font-size: 14px;
+    }
+
+    .share-icon {
+        font-size: 18px;
+    }
+}

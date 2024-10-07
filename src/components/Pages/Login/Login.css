@@ -1,0 +1,133 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.login .bg_img {
+    background-image: url("../../Images/Rectangle\ 1.png");
+    height: 100vh;
+    width: 500px;
+    float: right;
+}
+
+.login .com_images {
+    top: 0%;
+    right: 25%;
+}
+
+.login .welcome {
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.login .user_input {
+    border-color: #656ED3;
+    border-radius: 50px;
+    width: 367px;
+    height: 34px;
+    background-color: #EBEFFF;
+}
+
+.login .input_main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+.login .bg {
+    background-color: #EBEFFF;
+}
+
+.login .login_btn {
+    background-color: #656ED3;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 19.36px;
+    padding: 7px 170px 7px 170px;
+    border-radius: 30px;
+}
+
+.login .login_main {
+    margin-top: 120px;
+}
+
+.login .password-input-container {
+    position: relative;
+    width: 100%;
+}
+
+.login .password-input-container input {
+    padding-right: 40px; 
+}
+ 
+.login .password-icon {
+    position: absolute;
+    top: 45%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #555;
+}
+
+.login .password-icon:hover {
+    color: #000;
+}
+
+
+@media (max-width:1240px) {
+    .login .com_images {
+        top: 0%;
+        right: 10%;
+    }
+}
+
+@media (max-width:1115px) {
+    .login .com_images {
+        top: 0%;
+        right: 0%;
+    }
+}
+
+@media (max-width:992px) {
+    .login .com_images {
+        right: 0%;
+        left: 20%;
+    }
+
+    .login .bg_img {
+        height: 63vh;    
+        width: 100%;
+        float: right;
+    }
+}
+
+@media (max-width:600px) {
+    .login .com_images {
+        display: none;
+    }
+
+    .login .bg_img {
+        display: none;
+    }
+
+    .login .bg {
+        background-color: white;
+    }
+
+    .login .user_input {
+        background-color: white;
+        width: 100%;
+    }
+
+    .login .login_btn {
+        padding: 0;
+        width: 100%;
+        height: 35px;
+    }
+
+    .login .input_main {
+        align-items: normal;
+    }
+}

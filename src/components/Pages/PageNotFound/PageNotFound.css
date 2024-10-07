@@ -1,0 +1,59 @@
+.page-not-found {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(to bottom right, #e0eafc, #cfdef3); /* Gradient background */
+  font-family: 'Arial', sans-serif;
+  text-align: center;
+  padding: 20px; /* Padding for responsiveness */
+  box-sizing: border-box; /* Ensure padding doesn't affect layout */
+}
+
+.content {
+  max-width: 500px; /* Slightly narrower for modern look */
+  background-color: #ffffff;
+  padding: 40px;
+  border-radius: 15px; /* More rounded corners */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); /* Softer shadow */
+  transition: transform 0.3s, box-shadow 0.3s; /* Transition effects */
+}
+
+.content:hover {
+  transform: translateY(-5px); /* Lift effect on hover */
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2); /* Increased shadow on hover */
+}
+
+.error-code {
+  font-size: 100px; /* Larger font size for emphasis */
+  color: #e63946; /* Bright color for modern appeal */
+  margin: 0;
+}
+
+.message {
+  font-size: 28px; /* Slightly larger message font */
+  margin: 10px 0;
+  color: #1d3557; /* Darker color for better contrast */
+}
+
+.description {
+  color: #457b9d; /* Softer color for description */
+  margin-bottom: 30px; /* Increased margin for spacing */
+  line-height: 1.5; /* Improved readability */
+}
+
+.home-button {
+  padding: 12px 24px; /* Larger button for better touch targets */
+  font-size: 18px; /* Increased font size */
+  color: #ffffff;
+  background-color: #2a9d8f; /* Attractive teal color */
+  border: none;
+  border-radius: 8px; /* Slightly rounded corners */
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.3s; /* Smooth transitions */
+}
+
+.home-button:hover {
+  background-color: #264653; /* Darker color on hover */
+  transform: translateY(-2px); /* Lift effect on hover */
+}

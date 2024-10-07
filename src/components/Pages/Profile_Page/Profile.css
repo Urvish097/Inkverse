@@ -1,0 +1,110 @@
+.pro-sec-1 {
+    padding: 30px 0px;
+}
+
+.blogsingle_hero {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-blend-mode: overlay;
+    background-color: #00000033;
+    height: 700px;
+    margin: 50px 0;
+}
+
+.blogsingle_hero h1 {
+    max-width: 800px;
+}
+
+.abot_blog h2 {
+    font-size: 50px;
+}
+
+.abot_blog p {
+    font-size: 20px;
+    padding: 20px 0;
+}
+
+.blog_img img {
+    width: 100%;
+}
+
+.subscribe_main {
+    background-image: url("../../Images/subscribe.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding: 160px 0;
+    margin: 40px 0 80px 0;
+}
+
+.profile-add-image {
+    height: 400px;
+    object-fit: cover;
+    object-position: top;
+    border-radius: 5px;
+}
+
+.bolg-add-image-1 {
+    object-fit: contain;
+    object-position: center;
+    height: 600px;
+}
+
+.subscribe_btn {
+    top: 17%;
+    right: 1%;
+}
+
+@media (max-width:767px) {
+    .blogsingle_hero {
+        height: 620px;
+    }
+
+    .abot_blog h2 {
+        font-size: 46px;
+    }
+}
+
+@media (max-width:576px) {
+    .abot_blog h2 {
+        font-size: 36px;
+    }
+
+    .abot_blog p {
+        font-size: 17px;
+        padding: 10px 0;
+    }
+
+    .blogsingle_hero {
+        height: 450px;
+    }
+
+    .subscribe_fild input {
+        font-size: 18px !important;
+    }
+
+    .subscribe_btn {
+        top: 13%;
+        right: 1%;
+    }
+
+    .bolg-add-image-1 {
+        object-fit: cover;
+        object-position: center;
+        height: 400px;
+    }
+}
+
+@media (max-width:430px) {
+    .subscribe_btn {
+        top: 350%;
+        right: 30%;
+    }
+}
+
+@media (max-width:992px) {
+    .profile-add-image {
+        height: 300px;
+    }
+}
