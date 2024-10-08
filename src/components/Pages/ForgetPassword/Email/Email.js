@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import computer from '../../../Images/Computer.png';
+import { BaseUrl } from '../../../services/Url';
 
 const Email = () => {
     const [email, setEmail] = useState('');
@@ -14,7 +15,7 @@ const Email = () => {
         setLoading(true);
 
         try {
-            const response = await fetch('http://localhost:5000/user/resetpass/emailcheck', {
+            const response = await fetch(`${BaseUrl}/user/resetpass/emailcheck`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

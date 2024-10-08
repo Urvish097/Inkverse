@@ -5,6 +5,7 @@ import { CiShare2 } from 'react-icons/ci';
 import Postcard from '../../Cards/Card/Postcard';
 import { Post } from '../../Data/Data';
 import { useParams } from 'react-router-dom';
+import { BaseUrl } from '../../services/Url';
 
 
 const Profile = () => {
@@ -20,7 +21,7 @@ const Profile = () => {
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                const response = await fetch(`http://localhost:5000/user/view/blogs/post/${blogId}`, {
+                const response = await fetch(`${BaseUrl}/user/view/blogs/post/${blogId}`, {
                     method: "GET",
                     headers: {
                         authorization: `Bearer ${localStorage.getItem("token")}`,

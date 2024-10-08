@@ -5,6 +5,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./SignUp.css";
+import { BaseUrl } from "../../services/Url";
 
 const SignUp = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -54,7 +55,7 @@ const SignUp = () => {
         setIsLoading(true);  // Show loader while making the request
 
         try {
-            const response = await fetch("http://localhost:5000/user/user-signup", {
+            const response = await fetch(`${BaseUrl}/user/user-signup`, {
                 method: "POST",
                 body: formdata,  
             });

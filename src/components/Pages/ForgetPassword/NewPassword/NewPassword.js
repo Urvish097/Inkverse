@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom"; // useParams to get u
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { ToastContainer, toast } from 'react-toastify'; // For toast notifications
 import 'react-toastify/dist/ReactToastify.css'; // Import toast styles
+import { BaseUrl } from '../../../services/Url';
 
 const NewPassword = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -37,7 +38,7 @@ const NewPassword = () => {
 
         try {
             // Send PUT request to update password
-            const response = await fetch(`http://localhost:5000/user/updatepassword/${userId}`, {
+            const response = await fetch(`${BaseUrl}/user/updatepassword/${userId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -55,7 +56,7 @@ const NewPassword = () => {
                 toast.success(data.message || "Password updated successfully!");
 
                 // Call the delete OTP API after successful password update
-                const deleteOtpResponse = await fetch(`http://localhost:5000/user/delete-otp/${userId}`, {
+                const deleteOtpResponse = await fetch(`${BaseUrl}/user/delete-otp/${userId}`, {
                     method: 'DELETE', // Assuming DELETE is the correct method
                 });
 

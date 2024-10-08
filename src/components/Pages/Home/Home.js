@@ -4,6 +4,7 @@ import './Home.css';
 import Postcard from '../../Cards/Card/Postcard';
 import Descard from '../../Cards/Descard/Descard';
 import { Categary, Destination } from '../../Data/Data';
+import { BaseUrl } from '../../services/Url';
 
 import { Link } from 'react-router-dom';
 
@@ -15,7 +16,7 @@ const Home = () => {
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                const response = await fetch('http://localhost:5000/user/alluserpost', {
+                const response = await fetch(`${BaseUrl}/user/alluserpost`, {
                     method: "GET"
                 });
                 const data = await response.json();
@@ -37,7 +38,7 @@ const Home = () => {
 
     const fetchCategoryBlogs = async (category) => {
         try {
-            const response = await fetch("http://localhost:5000/user/category/blog");
+            const response = await fetch(`${BaseUrl}/user/category/blog`);
             const data = await response.json();
 
             if (response.ok) {

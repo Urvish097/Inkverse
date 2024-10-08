@@ -5,6 +5,7 @@ import { MdDelete } from "react-icons/md";
 import { IoMdShare } from "react-icons/io";
 import { Link, useNavigate } from 'react-router-dom';
 import { FaEdit } from "react-icons/fa";
+import { BaseUrl } from '../../services/Url';
 
 const Blog = () => {
     const [blogs, setBlogs] = useState([]);
@@ -17,7 +18,7 @@ const Blog = () => {
     useEffect(() => {
         const fetchBlogs = async () => {
             try {
-                const response = await fetch(`http://localhost:5000/user/userpost/${userId}`, {
+                const response = await fetch(`${BaseUrl}/user/userpost/${userId}`, {
                     method: "GET",
                     headers: {
                         authorization: `Bearer ${token}`,
@@ -40,7 +41,7 @@ const Blog = () => {
             // If search value is empty, fetch all blogs again
             const fetchBlogs = async () => {
                 try {
-                    const response = await fetch(`http://localhost:5000/user/userpost/${userId}`, {
+                    const response = await fetch(`${BaseUrl}/user/userpost/${userId}`, {
                         method: "GET",
                         headers: {
                             authorization: `Bearer ${token}`,
@@ -58,7 +59,7 @@ const Blog = () => {
         }
 
         try {
-            const response = await fetch(`http://localhost:5000/user/find/blog?title=${searchValue}&userId=${userId}`, {
+            const response = await fetch(`${BaseUrl}/user/find/blog?title=${searchValue}&userId=${userId}`, {
                 method: "GET",
                 headers: {
                     authorization: `Bearer ${token}`,
@@ -79,7 +80,7 @@ const Blog = () => {
         setLoadingId(blogId);
 
         try {
-            const response = await fetch(`http://localhost:5000/user/deletepost/${blogId}`, {
+            const response = await fetch(`${BaseUrl}/user/deletepost/${blogId}`, {
                 method: "DELETE",
                 headers: {
                     authorization: `Bearer ${token}`,

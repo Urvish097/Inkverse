@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { BaseUrl } from '../../services/Url';
 
 const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -26,7 +27,7 @@ const Login = () => {
         e.preventDefault(); // Prevent default form submission
 
         try {
-            const response = await fetch('http://localhost:5000/user/user-login', {
+            const response = await fetch(`${BaseUrl}/user/user-login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

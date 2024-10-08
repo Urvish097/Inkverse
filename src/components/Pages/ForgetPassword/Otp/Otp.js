@@ -3,6 +3,7 @@ import computer from '../../../Images/Computer.png';
 import { useNavigate, useParams } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { BaseUrl } from '../../../services/Url';
 
 const Otp = () => {
     const [otp, setOtp] = useState(['', '', '', '']);
@@ -49,7 +50,7 @@ const Otp = () => {
         const otpString = otp.join('');
 
         try {
-            const response = await fetch('http://localhost:5000/user/verifyotp', {
+            const response = await fetch(`${BaseUrl}/user/verifyotp`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -78,7 +79,7 @@ const Otp = () => {
     const handleOtpExpiry = async () => {
         if (userId) {
             try {
-                const response = await fetch(`http://localhost:5000/user/delete-otp/${userId}`, {
+                const response = await fetch(`${BaseUrl}/user/delete-otp/${userId}`, {
                     method: 'DELETE',
                 });
 

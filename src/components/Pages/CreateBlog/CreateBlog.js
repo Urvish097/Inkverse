@@ -1,11 +1,10 @@
-// src/components/CreateBlog/CreateBlog.jsx
-
 import React, { useState, useEffect } from 'react';
 import './CreateBlog.css';
 import { Categary } from "../../Data/Data"; // Ensure Categary is an array of objects with a 'name' property
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { BaseUrl } from '../../services/Url';
 
 const CreateBlog = () => {
     const location = useLocation();
@@ -106,8 +105,8 @@ const CreateBlog = () => {
 
             // Determine API endpoint and method based on whether editing or creating
             const url = blogToEdit
-                ? `http://localhost:5000/user/updatepost/${blogToEdit._id}/${userId}`  // Adjust based on your blog ID field
-                : 'http://localhost:5000/blog/blog-data';
+                ? `${BaseUrl}/user/updatepost/${blogToEdit._id}/${userId}`  // Adjust based on your blog ID field
+                : `${BaseUrl}/blog/blog-data`;
             const method = blogToEdit ? 'PUT' : 'POST';
 
             // Fetch API call
