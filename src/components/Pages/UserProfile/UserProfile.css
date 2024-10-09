@@ -1,0 +1,61 @@
+.UserProfile .card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 0 solid rgba(0, 0, 0, .125);
+    border-radius: .25rem;
+}
+
+.UserProfile .card_shadow {
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+.UserProfile .profileimage{
+    height: 120px;
+    width: 120px;
+    object-fit: cover;
+    border-radius: 100%;
+}
+
+.UserProfile .card-body {
+    flex: 1 1 auto;
+    min-height: 1px;
+    padding: 1rem;
+}
+
+.UserProfile .gutters-sm {
+    margin-right: -8px;
+    margin-left: -8px;
+}
+
+.UserProfile .gutters-sm>.col,
+.gutters-sm>[class*=col-] {
+    padding-right: 8px;
+    padding-left: 8px;
+}
+
+.UserProfile .mb-3,
+.my-3 {
+    margin-bottom: 1rem !important;
+}
+
+.UserProfile .bg-gray-300 {
+    background-color: #e2e8f0;
+}
+
+.UserProfile .h-100 {
+    height: 100% !important;
+}
+
+.UserProfile .shadow-none {
+    box-shadow: none !important;
+}
+
+@media (min-width:792px) and (max-width:992px) {
+    .UserProfile .card_shadow {
+        max-width: 605px;
+    }
+}

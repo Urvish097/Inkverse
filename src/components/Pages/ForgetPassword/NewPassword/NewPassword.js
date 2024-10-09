@@ -1,35 +1,32 @@
 import React, { useState } from 'react';
 import computer from '../../../Images/Computer.png';
-import { useNavigate, useParams } from "react-router-dom"; // useParams to get userId
+import { useNavigate, useParams } from "react-router-dom"; 
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { ToastContainer, toast } from 'react-toastify'; // For toast notifications
-import 'react-toastify/dist/ReactToastify.css'; // Import toast styles
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { BaseUrl } from '../../../services/Url';
 
 const NewPassword = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    const [newPassword, setNewPassword] = useState(''); // New password state
-    const [confirmPassword, setConfirmPassword] = useState(''); // Confirm password state
-    const [loading, setLoading] = useState(false); // Loading state
+    const [newPassword, setNewPassword] = useState(''); 
+    const [confirmPassword, setConfirmPassword] = useState(''); 
+    const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
     const { userId } = useParams(); 
-    // Get userId from URL parameters
+   
 
-    // Toggle password visibility
     const togglePasswordVisibility = () => setShowPassword(!showPassword);
     const toggleConfirmPasswordVisibility = () => setShowConfirmPassword(!showConfirmPassword);
 
-    // Navigate to the Login page
+    
     const handleNavigate = () => navigate("/Login");
 
-    // Handle form submission
     const handleSubmit = async (e) => {
-        e.preventDefault(); // Prevent default form submission behavior
-        setLoading(true); // Start loader
+        e.preventDefault(); 
+        setLoading(true); 
 
-        // Validate that both passwords match
         if (newPassword !== confirmPassword) {
             toast.error("Passwords do not match!");
             setLoading(false);
@@ -37,7 +34,6 @@ const NewPassword = () => {
         }
 
         try {
-            // Send PUT request to update password
             const response = await fetch(`${BaseUrl}/user/updatepassword/${userId}`, {
                 method: 'PUT',
                 headers: {
@@ -45,19 +41,18 @@ const NewPassword = () => {
                 },
                 body: JSON.stringify({
                     newpassword: newPassword,
-                    conformpassword: confirmPassword, // Backend expects this field name
+                    conformpassword: confirmPassword,
                 }),
             });
 
-            // Handle the response
             const data = await response.json();
 
             if (response.ok) {
                 toast.success(data.message || "Password updated successfully!");
+                localStorage.removeItem("IsOtp")
 
-                // Call the delete OTP API after successful password update
                 const deleteOtpResponse = await fetch(`${BaseUrl}/user/delete-otp/${userId}`, {
-                    method: 'DELETE', // Assuming DELETE is the correct method
+                    method: 'DELETE',
                 });
 
                 if (deleteOtpResponse.ok) {

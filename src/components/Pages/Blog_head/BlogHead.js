@@ -1,17 +1,22 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import logo from '../../Images/BlogLogo.png';
 import { Link, useNavigate } from 'react-router-dom';
 import './BlogHead.css';
 import { IoSearchSharp } from "react-icons/io5";
+import { BaseUrl } from '../../services/Url';
 
-const BlogHead = ({ onSearch }) => {  
+const BlogHead = ({ onSearch }) => {
+
+  const [userData, setUserData] = useState({});
+  const token = localStorage.getItem('token');
+
   const [searchValue, setSearchValue] = useState('');
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem('token'); 
-    localStorage.removeItem('profile'); 
-    localStorage.removeItem('userId'); 
+    localStorage.removeItem('token');
+    localStorage.removeItem('profile');
+    localStorage.removeItem('userId');
     localStorage.removeItem('username');
     navigate('/login');
   };
@@ -19,12 +24,38 @@ const BlogHead = ({ onSearch }) => {
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearchValue(value);
-    
-    // Call the onSearch function passed from parent when search input changes
+
     if (onSearch) {
       onSearch(value);
     }
+
   };
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const response = await fetch(`${BaseUrl}/user/userprofile/data`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+
+        const data = await response.json();
+        console.log(data.data, ">>>>>>>>data");
+
+        if (response.ok) {
+          setUserData(data.data);
+        } else {
+          console.error('Error fetching profile data:', data.message);
+        }
+      } catch (error) {
+        console.error('Fetch error:', error);
+      }
+    };
+
+    fetchUserProfile();
+  }, [token]);
 
   return (
     <>
@@ -39,7 +70,7 @@ const BlogHead = ({ onSearch }) => {
                 type="search"
                 className='form-control search_filed'
                 placeholder='Search Posts'
-                value={searchValue}  
+                value={searchValue}
                 onChange={handleSearchChange}  // Trigger search on input change
               />
               <span className='search-icon-blog position-absolute'>
@@ -47,7 +78,9 @@ const BlogHead = ({ onSearch }) => {
               </span>
             </div>
             <div className='profile-logo'>
-              <img src={localStorage.getItem("profile")} className='profile-image' height={"50px"} width={"50px"} alt="" />
+              <Link to={"/UserProfile"}>
+                <img src={userData.profile} className='profile-image' height={"50px"} width={"50px"} alt="" />
+              </Link>
             </div>
             <button className='btn' onClick={handleLogout}>Log Out</button>
           </div>

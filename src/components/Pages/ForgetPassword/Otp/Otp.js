@@ -5,21 +5,49 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { BaseUrl } from '../../../services/Url';
 
+const OTP_VALIDITY_DURATION = 60;
+
 const Otp = () => {
     const [otp, setOtp] = useState(['', '', '', '']);
     const [loading, setLoading] = useState(false);
-    const [timer, setTimer] = useState(60);
+    const [timer, setTimer] = useState(OTP_VALIDITY_DURATION);
     const navigate = useNavigate();
 
-    const { userId } = useParams()
+    const { userId } = useParams();
 
     useEffect(() => {
-        if (timer > 0) {
-            const countdown = setInterval(() => {
-                setTimer((prevTimer) => prevTimer - 1);
-            }, 1000);
-            return () => clearInterval(countdown);
-        } else if (timer === 0) {
+        // Check if OTP generation time is stored
+        const storedOtpTime = localStorage.getItem('otpGenerationTime');
+        let expiryTime;
+
+        if (storedOtpTime) {
+            expiryTime = parseInt(storedOtpTime, 10) + OTP_VALIDITY_DURATION;
+        } else {
+            // If not stored, set current time as generation time
+            const currentTime = Math.floor(Date.now() / 1000);
+            localStorage.setItem('otpGenerationTime', currentTime);
+            expiryTime = currentTime + OTP_VALIDITY_DURATION;
+        }
+
+        const updateTimer = () => {
+            const currentTime = Math.floor(Date.now() / 1000);
+            const remainingTime = expiryTime - currentTime;
+            setTimer(remainingTime > 0 ? remainingTime : 0);
+        };
+
+        // Initial timer setup
+        updateTimer();
+
+        // Set interval to update timer every second
+        const countdown = setInterval(() => {
+            updateTimer();
+        }, 1000);
+
+        return () => clearInterval(countdown);
+    }, []);
+
+    useEffect(() => {
+        if (timer === 0) {
             handleOtpExpiry();
         }
     }, [timer]);
@@ -30,10 +58,10 @@ const Otp = () => {
         if (/^\d*$/.test(value)) {
             const newOtp = [...otp];
             newOtp[index] = value;
+            setOtp(newOtp);
             if (value && index < 3) {
                 document.getElementById(`otp-${index + 1}`).focus();
             }
-            setOtp(newOtp);
         }
     };
 
@@ -55,7 +83,7 @@ const Otp = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ otp: otpString }),
+                body: JSON.stringify({ otp: otpString, userId }), // Ensure userId is sent if required
             });
 
             const data = await response.json();
@@ -63,6 +91,8 @@ const Otp = () => {
 
             if (response.ok) {
                 toast.success(data.message || 'OTP verified successfully!');
+                
+                localStorage.removeItem('otpGenerationTime');
                 setTimeout(() => {
                     navigate(`/Newpassword/${data.data.userId}`);
                 }, 2000);
@@ -77,6 +107,9 @@ const Otp = () => {
     };
 
     const handleOtpExpiry = async () => {
+        // Clear stored OTP generation time
+        localStorage.removeItem('otpGenerationTime');
+
         if (userId) {
             try {
                 const response = await fetch(`${BaseUrl}/user/delete-otp/${userId}`, {
@@ -85,6 +118,9 @@ const Otp = () => {
 
                 if (response.ok) {
                     toast.warning('OTP expired!');
+                    setTimeout(() => {
+                        navigate("/Email");
+                    }, 2000);
                 } else {
                     toast.error('Failed to delete OTP. Please try again.');
                 }

@@ -1,16 +1,19 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import logo from '../Images/Logo.png';
 import './Header.css';
 import { Navbar } from "../Data/Data";
 import { IoIosSearch } from "react-icons/io";
 
 const Header = (props) => {
+
+    const navigate = useNavigate()
+
     return (
         <>
-            <nav className="navbar navbar-expand-lg" style={{backgroundColor:props.bg}}>
+            <nav className="navbar navbar-expand-lg" style={{ backgroundColor: props.bg }}>
                 <div className="container-lg container-fluid">
-                    <Link className="navbar-brand"><img src={logo} className='logo' alt="Logo" style={{height:props.logo}} /></Link>
+                    <Link className="navbar-brand"><img src={logo} className='logo' alt="Logo" style={{ height: props.logo }} /></Link>
                     <button className="navbar-toggler bg-white btn menu-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
                         <span className="navbar-toggler-text inter fw-bold text-black">Menu</span>
                     </button>
@@ -29,7 +32,7 @@ const Header = (props) => {
                             </ul>
                             <div class="d-flex align-items-center gap-4 create_blog_main_btn">
                                 <IoIosSearch className='text-white fs-4' />
-                                <button className='btn  SegoeUI blog-btn fs-6 rounded-0 ' style={{backgroundColor:props.btn_white,color:props.btn_text}}><Link className='text-decoration-none create-btn' style={{color:props.btn_text}} to={"/Blog"}>CREATE A BLOG</Link></button>
+                                <button className='btn  SegoeUI blog-btn fs-6 rounded-0' onClick={() => navigate("/Blog")} data-bs-dismiss="offcanvas" aria-label="Close" style={{ backgroundColor: props.btn_white, color: props.btn_text }}><Link className='text-decoration-none create-btn' style={{ color: props.btn_text }}>CREATE A BLOG</Link></button>
                             </div>
                         </div>
                     </div>

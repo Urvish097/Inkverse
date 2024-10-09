@@ -37,7 +37,6 @@ const Login = () => {
 
             const data = await response.json();
 
-            // Check for success or failure and display the appropriate toast
             if (response.ok && data.message === "USER LOGIN SUCSSEFULYY") {
                 localStorage.setItem("token", data.Token);
                 localStorage.setItem("profile", data.data.profile)
@@ -45,8 +44,8 @@ const Login = () => {
                 localStorage.setItem("userId",data.data._id)
                 toast.success("Login successful!");
                 setTimeout(() => {
-                    navigate('/'); // Redirect to home page after toast is shown
-                }, 2000); // Delay navigation to allow toast to be visible
+                    navigate('/'); 
+                }, 2000); 
             } else {
                 toast.error(data.message || "Login failed. Please try again.");
             }
