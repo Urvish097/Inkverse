@@ -1,5 +1,5 @@
 import './App.css';
-import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, useLocation, useParams } from 'react-router-dom';
 import Home from './components/Pages/Home/Home';
 import Login from './components/Pages/Login/Login';
 import SignUp from './components/Pages/SignUp/SignUp';
@@ -26,25 +26,32 @@ function App() {
 }
 
 function ContentWithFooter() {
-  const location = useLocation();
-  const shouldShowFooter =
-    location.pathname !== '/Login' &&
-    location.pathname !== '/Register' &&
-    location.pathname !== '/Blog' &&
-    location.pathname !== '/CreateBlog' &&
-    location.pathname !== '/Email' &&
-    location.pathname !== "/Otp" &&
-    location.pathname !== '/Newpassword' &&
-    location.pathname !== "/UserProfile" &&
-    location.pathname !== "/UserProfileUpdate" &&
-    location.pathname !== '*';
+  const { pathname } = useLocation();
+
+  const Routs = pathname.slice(0, 8)
+  console.log(Routs, ">>>>>routs");
+
+
+  let shouldShowFooter = false
+
+  switch (Routs) {
+    case "/":
+      shouldShowFooter = true
+      break;
+    case "/Profile":
+      shouldShowFooter = true
+      break;
+    default:
+      shouldShowFooter = false
+      break;
+  }
 
   return (
     <>
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='*' element={<PageNotFound />} />
-        <Route path='/Login' element={<Login />} />
+        <Route path='/login' element={<Login />} />
         <Route path='/Register' element={<SignUp />} />
         <Route path='/Email' element={<Email />} />
         <Route element={<PrivateRoute />}>

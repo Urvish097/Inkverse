@@ -3,7 +3,7 @@ import Header from '../../Header/Header';
 import "./Profile.css";
 import { CiShare2 } from 'react-icons/ci';
 import Postcard from '../../Cards/Card/Postcard';
-import { Post } from '../../Data/Data';
+// import { Post } from '../../Data/Data';
 import { useParams } from 'react-router-dom';
 import { BaseUrl } from '../../services/Url';
 
@@ -12,6 +12,7 @@ const Profile = () => {
 
     const [showAll, setShowAll] = useState(false);
     const [Blog, setBlog] = useState({});
+    const [posts, setPosts] = useState([]);
 
     const handleToggle = () => {
         setShowAll(!showAll);
@@ -36,7 +37,27 @@ const Profile = () => {
 
         fetchPosts();
     }, [blogId]);
-    console.log(Blog, "===>blog");
+
+    useEffect(() => {
+        const fetchPosts = async () => {
+            try {
+                const response = await fetch(`${BaseUrl}/user/alluserpost`, {
+                    method: "GET"
+                });
+                const data = await response.json();
+                if (data.success) {
+                    setPosts(data.data);
+
+                } else {
+                    console.error('Failed to fetch blogs:', data.message);
+                }
+            } catch (error) {
+                console.error('Error fetching blogs:', error);
+            }
+        };
+
+        fetchPosts();
+    }, []);
 
     return (
         <>
@@ -51,9 +72,6 @@ const Profile = () => {
                         <h1 className="europa_bold text-uppercase">
                             {Blog.title}
                         </h1>
-                        <p className="fs-sm-4 fs-5 europa_reg">
-                            {Blog.maindescription}
-                        </p>
                         <div className="d-flex flex-wrap">
                             <p className="me-4">by {Blog.name}</p>
                             <p className="me-4">{new Date(Blog.date).toDateString()}</p>
@@ -69,21 +87,14 @@ const Profile = () => {
             <section>
                 <div className="container">
                     <div className="abot_blog">
-                        <h2>Tincidunt veni tellus orci aenean consectetuer</h2>
+                        <h2>{Blog.title}</h2>
                         <p>
-                            {Blog.adddescription1}
+                            {Blog.maindescription}
                         </p>
                         <div>
                             <img src={Blog.additionalimg} className='bolg-add-image-1' alt="" width={"100%"} height={"100%"} />
                         </div>
-                        <p>
-                            Sociis consequat adipiscing sit curabitur donec sem luctus cras
-                            natoque vulputate dolor eget dapibus. Nec vitae eros ullamcorper
-                            laoreet dapibus mus ac ante viverra. A aenean sit augue curabitur
-                            et parturient nisi sed enim. Nulla nec quis sit quisque sem
-                            commodo ultricies neque. Lorem eget venenatis dui ante luctus
-                            ultricies tellus montes. Quis in sapien tempus.
-                        </p>
+                        <p> {Blog.adddescription1} </p>
                         <h2>Eu ridiculus fringilla</h2>
                         <p>
                             {Blog.adddescription2}
@@ -151,19 +162,22 @@ const Profile = () => {
             <section>
                 <div className="container">
                     <div className="blogs sec-2 my-5">
+                        <h3 className='Europa_Bold mb-5 text-center text-lg-start'>You May Also Like</h3>
                         <div className="row justify-content-center">
-                            {Post.slice(0, showAll ? Post.length : 3).map((item, index) => (
+                            {posts.slice(0, showAll ? posts.length : 3).map((post, index) => (
                                 <div className='col-lg-4 col-md-6' key={index}>
-                                    <Postcard post={item} />
+                                    <Postcard post={post} />
                                 </div>
                             ))}
                         </div>
-                        <button
-                            className="load-btn europa_bold bg-white"
-                            onClick={handleToggle}
-                        >
-                            {showAll ? "Show Less" : "Load More"}
-                        </button>
+                        <div className='d-flex justify-content-center'>
+                            <button
+                                className="load-btn europa_bold bg-white"
+                                onClick={handleToggle}
+                            >
+                                {showAll ? "Show Less" : "Load More"}
+                            </button>
+                        </div>
                     </div>
                 </div>
             </section>
