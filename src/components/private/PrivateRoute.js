@@ -11,8 +11,3 @@ export const PrivateRouteOtp = ({ children }) => {
   return Isotp ? <Outlet /> : <Navigate to="/Email" />;
 };
 
-export const PrivateRouteVerify = ({ children }) => {
-  const Verify = localStorage.getItem("Verify");
-  return Verify ? <Outlet /> : <Navigate to="/Otp" />;
-};
-
