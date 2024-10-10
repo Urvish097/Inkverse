@@ -107,12 +107,12 @@ const Blog = () => {
     return (
         <>
             <div className='mb-5'>
-                <BlogHead onSearch={handleSearch} />  {/* Pass the search handler */}
+                <BlogHead onSearch={handleSearch} /> 
             </div>
             <section className='Blog'>
                 <div className='container mb-4'>
                     <div className='d-flex justify-content-between align-items-center mb-5'>
-                        <p className='blog-total'>All({blogs?.length})</p>
+                        <p className='blog-total mb-0'>All({blogs?.length})</p>
                         <button className='btn new-post-btn d-flex justify-content-center align-items-center'>
                             <Link className='text-decoration-none text-black' to={"/CreateBlog"}>
                                 <span className='fs-4'>+</span> New Post
@@ -122,10 +122,10 @@ const Blog = () => {
                     {blogs?.length > 0 ? (
                         blogs?.map((blog) => (
                             <div key={blog._id} className='blog-main mb-4'>
-                                <div className='d-flex justify-content-between align-items-center'>
+                                <div className='d-flex justify-content-md-between flex-wrap align-items-center'>
                                     <div className='d-flex gap-4 align-items-center'>
                                         <div className='title'>
-                                            <img src={blog.blogimg} className='Blog-title-image' style={{ height: "90px", width: "90px" }} alt="Title-image" />
+                                            <img src={blog.blogimg} className='Blog-title-image' alt="Title-image" />
                                         </div>
                                         <div>
                                             <p className='blog-name mb-1'>{blog.title}</p>
@@ -137,10 +137,10 @@ const Blog = () => {
                                             <div className="spinner"></div>
                                         ) : (
                                             <>
-                                                <span onClick={(e) => handleDeleteClick(blog._id, e)}>
+                                                <span onClick={(e) => handleDeleteClick(blog._id, e)} role="button" aria-label="Delete Blog">
                                                     <MdDelete className='fs-4' />
                                                 </span>
-                                                <span onClick={() => handleEditClick(blog)}>
+                                                <span onClick={() => handleEditClick(blog)} role="button" aria-label="Edit Blog">
                                                     <FaEdit className='fs-4' />
                                                 </span>
                                                 <span><IoMdShare className='fs-4' /></span>

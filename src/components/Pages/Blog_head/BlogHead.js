@@ -11,15 +11,6 @@ const BlogHead = ({ onSearch }) => {
   const token = localStorage.getItem('token');
 
   const [searchValue, setSearchValue] = useState('');
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('profile');
-    localStorage.removeItem('userId');
-    localStorage.removeItem('username');
-    navigate('/login');
-  };
 
   const handleSearchChange = (e) => {
     const value = e.target.value;
@@ -82,7 +73,6 @@ const BlogHead = ({ onSearch }) => {
                 <img src={userData.profile} className='profile-image' height={"50px"} width={"50px"} alt="" />
               </Link>
             </div>
-            <button className='btn' onClick={handleLogout}>Log Out</button>
           </div>
         </div>
       </section>

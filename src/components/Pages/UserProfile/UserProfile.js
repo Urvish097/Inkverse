@@ -1,12 +1,13 @@
 // UserProfile.jsx
 import React, { useEffect, useState } from 'react';
 import "./UserProfile.css";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { BaseUrl } from '../../services/Url';
 
 const UserProfile = () => {
     const [userData, setUserData] = useState({});
     const token = localStorage.getItem('token');
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchUserProfile = async () => {
@@ -34,6 +35,14 @@ const UserProfile = () => {
 
         fetchUserProfile();
     }, [token, BaseUrl]);
+
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('profile');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('username');
+        navigate('/login');
+    };
 
     return (
         <section className='UserProfile'>
@@ -82,13 +91,16 @@ const UserProfile = () => {
                                     <hr />
                                     <div className="row">
                                         <div className="col-sm-12">
-                                            <Link
-                                                to={`/UserProfileUpdate/${userData._id}`}
-                                                state={{ user: userData }}
-                                                className="btn btn-info"
-                                            >
-                                                Edit
-                                            </Link>
+                                            <div className='d-flex justify-content-between'>
+                                                <Link
+                                                    to={`/UserProfileUpdate/${userData._id}`}
+                                                    state={{ user: userData }}
+                                                    className="btn btn-info fw-semibold"
+                                                >
+                                                    Edit
+                                                </Link>
+                                                <button className='btn btn-danger fw-semibold' onClick={handleLogout}>Log Out</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
