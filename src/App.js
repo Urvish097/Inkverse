@@ -16,31 +16,32 @@ import NewPassword from './components/Pages/ForgetPassword/NewPassword/NewPasswo
 import PageNotFound from './components/Pages/PageNotFound/PageNotFound';
 import UserProfile from './components/Pages/UserProfile/UserProfile';
 import UpdateProfile from './components/Pages/UpdateProfile/UpdateProfile';
+import Admin from './components/Pages/Admin/Admin';
 
 function App() {
 
-  // useEffect(() => {
-  //   const disableRightClick = (e) => {
-  //     e.preventDefault();
-  //   };
+  useEffect(() => {
+    const disableRightClick = (e) => {
+      e.preventDefault();
+    };
 
-  //   const disableDevTools = (e) => {
-  //     if (e.keyCode === 123) {
-  //       e.preventDefault();
-  //     }
-  //     if (e.ctrlKey && e.shiftKey && e.keyCode === 73) {
-  //       e.preventDefault();
-  //     }
-  //   };
+    const disableDevTools = (e) => {
+      if (e.keyCode === 123) {
+        e.preventDefault();
+      }
+      if (e.ctrlKey && e.shiftKey && e.keyCode === 73) {
+        e.preventDefault();
+      }
+    };
 
-  //   document.addEventListener('contextmenu', disableRightClick);
-  //   document.addEventListener('keydown', disableDevTools);
+    document.addEventListener('contextmenu', disableRightClick);
+    document.addEventListener('keydown', disableDevTools);
 
-  //   return () => {
-  //     document.removeEventListener('contextmenu', disableRightClick);
-  //     document.removeEventListener('keydown', disableDevTools);
-  //   };
-  // }, []);
+    return () => {
+      document.removeEventListener('contextmenu', disableRightClick);
+      document.removeEventListener('keydown', disableDevTools);
+    };
+  }, []);
 
   return (
     <BrowserRouter>
@@ -78,6 +79,7 @@ function ContentWithFooter() {
         <Route path='/login' element={<Login />} />
         <Route path='/Register' element={<SignUp />} />
         <Route path='/Email' element={<Email />} />
+        <Route path='/AdminPanel' element={<Admin />} />
         <Route element={<PrivateRoute />}>
           <Route path='/Profile/:blogId' element={<Profile />} />
           <Route path='/Blog' element={<Blog />} />
