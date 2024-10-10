@@ -1,0 +1,29 @@
+.scroll-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #000;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    padding: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    opacity: 0;
+    transform: translateY(100px); /* Start below the screen */
+}
+
+.scroll-to-top.visible {
+    opacity: 1;
+    transform: translateY(0); /* Slide into view */
+}
+
+.scroll-to-top.hidden {
+    opacity: 0;
+    transform: translateY(100px); /* Slide out of view */
+}
+
+.scroll-to-top:hover {
+    background-color: #333; /* Darken on hover */
+}

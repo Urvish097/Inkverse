@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { FaAngleUp } from 'react-icons/fa';
+import './ScrollToTop.css'; // Import external CSS for animation
 
 const ScrollToTop = () => {
     const [scrollPosition, setScrollPosition] = useState(0);
     const [isVisible, setIsVisible] = useState(false);
+    const [isUserScrolling, setIsUserScrolling] = useState(false);
+    const timerRef = useRef(null);
 
     const handleScroll = () => {
         const position = window.scrollY;
@@ -17,6 +20,11 @@ const ScrollToTop = () => {
         } else {
             setIsVisible(false);
         }
+
+        // Reset scrolling state and timer
+        setIsUserScrolling(true);
+        clearTimeout(timerRef.current);
+        timerRef.current = setTimeout(() => setIsUserScrolling(false), 2000); // Hide button after 2 seconds of inactivity
     };
 
     const scrollToTop = () => {
@@ -25,19 +33,21 @@ const ScrollToTop = () => {
 
     useEffect(() => {
         window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+            clearTimeout(timerRef.current);
+        };
     }, []);
 
     return (
         <button
-        
-        className={`scroll-to-top ${isVisible ? 'visible' : ''}`}
+            className={`scroll-to-top ${isVisible && isUserScrolling ? 'visible' : 'hidden'}`}
             onClick={scrollToTop}
             style={{
-                background: `conic-gradient(black ${scrollPosition}%, #d3d3d3 ${scrollPosition}%)`
+                background: `conic-gradient(black ${scrollPosition}%, #d3d3d3 ${scrollPosition}%)`,
             }}
         >
-            <FaAngleUp/>
+            <FaAngleUp />
         </button>
     );
 };
