@@ -1,0 +1,102 @@
+.user-table-container {
+    flex: 1;
+    padding: 20px;
+}
+
+.table-title {
+    margin-bottom: 20px;
+    color: #343a40;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.user-table th,
+.user-table td {
+    padding: 12px 15px;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.user-table th {
+    background-color: #343a40;
+    color: #ffffff;
+    position: sticky;
+    top: 0;
+}
+
+.profile-image {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.action-btn {
+    border: none;
+    background: none;
+    cursor: pointer;
+    margin-right: 10px;
+    font-size: 1.2em;
+    transition: background-color 0.3s, color 0.3s;
+    padding: 5px 10px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-delete {
+    color: #dc3545; /* Bootstrap danger color */
+}
+
+.btn-delete:hover {
+    color: #a71d2a;
+}
+
+.btn-block {
+    background-color: #ffc107; /* Bootstrap warning color */
+    color: #212529;
+}
+
+.btn-block:hover {
+    background-color: #e0a800;
+    color: #fff;
+}
+
+.btn-unblock {
+    background-color: #28a745; /* Bootstrap success color */
+    color: #fff;
+}
+
+.btn-unblock:hover {
+    background-color: #218838;
+    color: #fff;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .user-table th,
+    .user-table td {
+        padding: 8px 10px;
+    }
+
+    .profile-image {
+        width: 40px;
+        height: 40px;
+    }
+
+    .action-btn {
+        font-size: 1em;
+        margin-right: 5px;
+        padding: 4px 8px;
+    }
+}

@@ -62,7 +62,7 @@ const BlogHead = ({ onSearch }) => {
                 className='form-control search_filed'
                 placeholder='Search Posts'
                 value={searchValue}
-                onChange={handleSearchChange}  // Trigger search on input change
+                onChange={handleSearchChange}
               />
               <span className='search-icon-blog position-absolute'>
                 <IoSearchSharp className='fs-5' />

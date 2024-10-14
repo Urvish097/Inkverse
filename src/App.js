@@ -17,6 +17,9 @@ import PageNotFound from './components/Pages/PageNotFound/PageNotFound';
 import UserProfile from './components/Pages/UserProfile/UserProfile';
 import UpdateProfile from './components/Pages/UpdateProfile/UpdateProfile';
 import Admin from './components/Pages/Admin/Admin';
+import AdminPost from './components/Pages/Admin/AdminPost';
+import AdminUser from './components/Pages/Admin/AdminUser';
+import AdminView from './components/Pages/Admin/AdminView';
 
 function App() {
 
@@ -80,6 +83,9 @@ function ContentWithFooter() {
         <Route path='/Register' element={<SignUp />} />
         <Route path='/Email' element={<Email />} />
         <Route path='/AdminPanel' element={<Admin />} />
+        <Route path='/Adminpost' element={<AdminPost />} />
+        <Route path='/AdminUser' element={<AdminUser />} />
+        <Route path='/AdminView/:blogId' element={<AdminView />} />
         <Route element={<PrivateRoute />}>
           <Route path='/Profile/:blogId' element={<Profile />} />
           <Route path='/Blog' element={<Blog />} />

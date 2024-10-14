@@ -15,7 +15,7 @@ const CreateBlog = () => {
         name: blogToEdit ? blogToEdit.name : username,
         title: blogToEdit ? blogToEdit.title : '',
         category: blogToEdit ? blogToEdit.category : '',
-        date: blogToEdit ? new Date(blogToEdit.date).toISOString().split('T')[0] : '',
+        date: blogToEdit ? new Date(blogToEdit.date).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
         maindescription: blogToEdit ? blogToEdit.maindescription : '',
         adddescription1: blogToEdit ? blogToEdit.adddescription1 : '',
         adddescription2: blogToEdit ? blogToEdit.adddescription2 : '',
@@ -207,6 +207,7 @@ const CreateBlog = () => {
                                 value={formData.date}
                                 onChange={handleChange}
                                 required
+                                readOnly
                             />
                         </div>
 
