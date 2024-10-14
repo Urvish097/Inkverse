@@ -8,7 +8,7 @@ import Footer from './components/Footer/Footer';
 import ScrollToTop from './components/ScrollToTop/ScrollToTop';
 import Profile from './components/Pages/Profile_Page/Profile';
 import Blog from './components/Pages/Blog/Blog';
-import { PrivateRoute, PrivateRouteOtp } from './components/private/PrivateRoute';
+import { AdminPrivateRoute, PrivateRoute, PrivateRouteOtp } from './components/private/PrivateRoute';
 import CreateBlog from './components/Pages/CreateBlog/CreateBlog';
 import Email from './components/Pages/ForgetPassword/Email/Email';
 import Otp from './components/Pages/ForgetPassword/Otp/Otp';
@@ -20,6 +20,7 @@ import Admin from './components/Pages/Admin/Admin';
 import AdminPost from './components/Pages/Admin/AdminPost';
 import AdminUser from './components/Pages/Admin/AdminUser';
 import AdminView from './components/Pages/Admin/AdminView';
+import AdminLogin from './components/Pages/Admin/AdminLogin';
 
 function App() {
 
@@ -82,10 +83,13 @@ function ContentWithFooter() {
         <Route path='/login' element={<Login />} />
         <Route path='/Register' element={<SignUp />} />
         <Route path='/Email' element={<Email />} />
-        <Route path='/AdminPanel' element={<Admin />} />
-        <Route path='/Adminpost' element={<AdminPost />} />
-        <Route path='/AdminUser' element={<AdminUser />} />
+        <Route element={<AdminPrivateRoute />}>
+          <Route path='/AdminPanel' element={<Admin />} />
+          <Route path='/Adminpost' element={<AdminPost />} />
+          <Route path='/AdminUser' element={<AdminUser />} />
+        </Route>
         <Route path='/AdminView/:blogId' element={<AdminView />} />
+        <Route path='/adminlogin' element={<AdminLogin />} />
         <Route element={<PrivateRoute />}>
           <Route path='/Profile/:blogId' element={<Profile />} />
           <Route path='/Blog' element={<Blog />} />

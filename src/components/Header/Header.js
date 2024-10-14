@@ -4,10 +4,24 @@ import logo from '../Images/Logo.png';
 import './Header.css';
 import { Navbar } from "../Data/Data";
 import { IoIosSearch } from "react-icons/io";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Header = (props) => {
 
     const navigate = useNavigate()
+    // const userStatus = localStorage.getItem("status");
+
+    const HaldelStatus = () => {
+        // if (userStatus === "Pending") {
+        //     toast.error("Your status is pending. You cannot create a Blog yet.", { autoClose: 3000 });
+        // } else if (userStatus === "Block") {
+        //     toast.error("Your Block by Admin. You cannot create a Blog Post", { autoClose: 3000 });
+        // } else {
+        //     navigate("/blog");
+        // }
+        navigate("/blog");
+    }
 
     return (
         <>
@@ -32,12 +46,13 @@ const Header = (props) => {
                             </ul>
                             <div class="d-flex align-items-center gap-4 create_blog_main_btn">
                                 <IoIosSearch className='text-white fs-4' />
-                                <button className='btn  SegoeUI blog-btn fs-6 rounded-0' onClick={() => navigate("/Blog")} data-bs-dismiss="offcanvas" aria-label="Close" style={{ backgroundColor: props.btn_white, color: props.btn_text }}><Link className='text-decoration-none create-btn' style={{ color: props.btn_text }}>CREATE A BLOG</Link></button>
+                                <button className='btn  SegoeUI blog-btn fs-6 rounded-0' onClick={HaldelStatus} data-bs-dismiss="offcanvas" aria-label="Close" style={{ backgroundColor: props.btn_white, color: props.btn_text }}><Link className='text-decoration-none create-btn' style={{ color: props.btn_text }}>CREATE A BLOG</Link></button>
                             </div>
                         </div>
                     </div>
                 </div>
             </nav>
+            <ToastContainer />
         </>
     );
 }

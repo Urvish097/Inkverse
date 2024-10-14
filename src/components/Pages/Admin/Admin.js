@@ -119,13 +119,21 @@ const ApexChart = ({ blogData }) => {
 const Admin = () => {
     const [totalUsers, setTotalUsers] = useState(0);
     const [totalBlogs, setTotalBlogs] = useState(0);
+    const token = localStorage.getItem('admintoken');
     const [loading, setLoading] = useState(true);
     const [monthlyBlogData, setMonthlyBlogData] = useState([]);
 
     useEffect(() => {
         const fetchDashboardData = async () => {
             try {
-                const dashboardResponse = await fetch(`${BaseUrl}/admin/dashboard`);
+
+                const dashboardResponse = await fetch(`${BaseUrl}/admin/dashboard`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    }
+                });
+
                 const dashboardData = await dashboardResponse.json();
 
                 if (dashboardData.success) {
@@ -133,7 +141,13 @@ const Admin = () => {
                     setTotalBlogs(dashboardData.data.TotalBlog);
                 }
 
-                const chartResponse = await fetch(`${BaseUrl}/admin/chart`);
+                const chartResponse = await fetch(`${BaseUrl}/admin/chart`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    }
+                });
+
                 const chartData = await chartResponse.json();
 
                 if (chartData.success) {
@@ -148,6 +162,7 @@ const Admin = () => {
 
         fetchDashboardData();
     }, []);
+
 
     if (loading) {
         return <div>Loading...</div>;

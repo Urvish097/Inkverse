@@ -11,3 +11,8 @@ export const PrivateRouteOtp = ({ children }) => {
   return Isotp ? <Outlet /> : <Navigate to="/Email" />;
 };
 
+export const AdminPrivateRoute = ({ children }) => {
+  const token = localStorage.getItem("admintoken");
+  return token ? <Outlet /> : <Navigate to="/adminlogin" />;
+};
+

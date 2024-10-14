@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './Login.css';
+import '../Login/Login.css';
 import computer from '../../Images/Computer.png';
 import { Link, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
@@ -7,7 +7,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { BaseUrl } from '../../services/Url';
 
-const Login = () => {
+const AdminLogin = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [formData, setFormData] = useState({
         email: '',
@@ -27,7 +27,7 @@ const Login = () => {
         e.preventDefault(); // Prevent default form submission
 
         try {
-            const response = await fetch(`${BaseUrl}/user/user-login`, {
+            const response = await fetch(`${BaseUrl}/admin/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -37,16 +37,12 @@ const Login = () => {
 
             const data = await response.json();
 
-            if (response.ok && data.message === "USER LOGIN SUCSSEFULYY") {
-                localStorage.setItem("token", data.Token);
-                localStorage.setItem("profile", data.data.profile)
-                localStorage.setItem("username", data.data.username)
-                localStorage.setItem("userId",data.data._id)
-                localStorage.setItem("status",data.data.status)
+            if (response.ok && data.message === "Admin LOGIN SUCSSEFULYY") {
+                localStorage.setItem("admintoken", data.Token);
                 toast.success("Login successful!");
                 setTimeout(() => {
-                    navigate('/'); 
-                }, 2000); 
+                    navigate('/adminpanel');
+                }, 2000);
             } else {
                 toast.error(data.message || "Login failed. Please try again.");
             }
@@ -99,15 +95,7 @@ const Login = () => {
                                             Login
                                         </button>
                                     </div>
-                                        <Link to={"/Email"} className='mb-0 text-center d-flex justify-content-center mb-3 text-decoration-none'>Forget Password?</Link>
                                 </form>
-                                <div>
-                                    <p className='inter fw-medium text-center'>Don't have an account?{" "}
-                                        <Link to={"/Register"} className='inter fw-bold text-dark text-decoration-none'>
-                                            Register
-                                        </Link>
-                                    </p>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -124,4 +112,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default AdminLogin;

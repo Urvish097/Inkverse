@@ -14,6 +14,19 @@
     overflow-x: auto;
 }
 
+.filters {
+    display: flex;
+    gap: 10px;
+    /* Adds space between the select and search input */
+    flex-wrap: wrap;
+    /* Allows wrapping on smaller screens */
+}
+
+.status-filter {
+    width: 200px;
+    /* Adjust the width as needed */
+}
+
 .user-table {
     width: 100%;
     border-collapse: collapse;
@@ -40,6 +53,29 @@
     border-radius: 50%;
 }
 
+.btn-active {
+    background-color: #28a745 !important;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-active:hover {
+    background-color: #218838;
+}
+
+/* Style for the status icon */
+.status-icon {
+    font-size: 1.2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
 .action-btn {
     border: none;
     background: none;
@@ -55,7 +91,8 @@
 }
 
 .btn-delete {
-    color: #dc3545; /* Bootstrap danger color */
+    color: #dc3545;
+    /* Bootstrap danger color */
 }
 
 .btn-delete:hover {
@@ -63,7 +100,8 @@
 }
 
 .btn-block {
-    background-color: #ffc107; /* Bootstrap warning color */
+    background-color: #ffc107;
+    /* Bootstrap warning color */
     color: #212529;
 }
 
@@ -73,7 +111,8 @@
 }
 
 .btn-unblock {
-    background-color: #28a745; /* Bootstrap success color */
+    background-color: #28a745;
+    /* Bootstrap success color */
     color: #fff;
 }
 
@@ -84,6 +123,7 @@
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
+
     .user-table th,
     .user-table td {
         padding: 8px 10px;

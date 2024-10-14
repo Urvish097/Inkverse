@@ -13,10 +13,8 @@ const AdminPost = () => {
     const [deletingId, setDeletingId] = useState(null);
     const [searchValue, setSearchValue] = useState('');
     const userId = localStorage.getItem('userId');
-    const token = localStorage.getItem("token");
-    const navigate = useNavigate();
+    const token = localStorage.getItem("admintoken");
 
-    // Function to fetch all blogs
     const fetchAllBlogs = async () => {
         setIsFetching(true);
         try {
@@ -80,7 +78,6 @@ const AdminPost = () => {
 
     useEffect(() => {
         fetchAllBlogs();
-        // Cleanup debounce on unmount
         return () => {
             debouncedSearch.cancel();
         };
@@ -154,7 +151,7 @@ const AdminPost = () => {
                                             <p className='blog-publish mb-0'>
                                                 Published <span className='ms-2'>{new Date(blog.date).toLocaleDateString()}</span>
                                             </p>
-                                            <p className='blog-publish mt-2'>Created By : {blog.userId.username.charAt(0).toUpperCase() + blog.userId.username.slice(1)}</p>
+                                            <p className='blog-publish mt-2'>Created By : {blog.userId.username?.charAt(0).toUpperCase() + blog.userId.username?.slice(1)}</p>
                                         </div>
                                     </div>
                                     <div className='d-flex align-items-center gap-3 me-3'>

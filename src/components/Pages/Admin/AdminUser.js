@@ -3,16 +3,27 @@ import AdminHeader from './AdminHeader';
 import './AdminUser.css';
 import { FaTrash } from 'react-icons/fa';
 import { toast } from 'react-toastify';
-import { BaseUrl } from '../../services/Url'
+import { BaseUrl } from '../../services/Url';
 
 const AdminUser = () => {
     const [users, setUsers] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
-    const [loading, setLoading] = useState(false); // Loading state
+    const [loading, setLoading] = useState(false);
 
-    const fetchUsers = async () => {
+    const fetchUsers = async (query = '') => {
         try {
-            const response = await fetch(`${BaseUrl}/admin/user`);
+            let url = `${BaseUrl}/admin/user`;
+
+            const params = new URLSearchParams();
+            if (query) {
+                params.append('username', query);
+            }
+            if ([...params].length > 0) {
+                url += `?${params.toString()}`;
+            }
+
+            setLoading(true);
+            const response = await fetch(url);
             if (!response.ok) {
                 throw new Error('Failed to fetch users');
             }
@@ -28,6 +39,8 @@ const AdminUser = () => {
         } catch (error) {
             console.error(error);
             toast.error('Error fetching user data');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -66,7 +79,7 @@ const AdminUser = () => {
         const isConfirmed = window.confirm('Are you sure you want to delete this user?');
         if (!isConfirmed) return;
 
-        setLoading(true); // Set loading to true before the API call
+        setLoading(true);
 
         try {
             const response = await fetch(`${BaseUrl}/admin/user/delete/${userId}`, {
@@ -83,8 +96,53 @@ const AdminUser = () => {
             console.error(error);
             toast.error('Error deleting user');
         } finally {
-            setLoading(false); // Set loading to false after the API call
+            setLoading(false);
         }
+    };
+
+    // Updated to retain original casing
+    const updateUserStatus = async (userId, status) => {
+        const isConfirmed = window.confirm(`Are you sure you want to ${status.toLowerCase()} this user?`);
+        if (!isConfirmed) return;
+
+        setLoading(true);
+
+        try {
+            const url = `${BaseUrl}/admin/user/status?userId=${userId}&status=${status}`;
+            const response = await fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to ${status.toLowerCase()} user`);
+            }
+
+            const result = await response.json();
+
+            setUsers((prevUsers) =>
+                prevUsers.map((user) =>
+                    user._id === userId ? { ...user, status } : user
+                )
+            );
+
+            toast.success(`User ${status.toLowerCase()}d successfully`);
+        } catch (error) {
+            console.error(error);
+            toast.error(`Error ${status.toLowerCase()}ing user`);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleActivate = (userId) => {
+        updateUserStatus(userId, 'Active');
+    };
+
+    const handleBlock = (userId) => {
+        updateUserStatus(userId, 'Block');
     };
 
     const capitalizeFirstLetter = (username) => {
@@ -98,13 +156,22 @@ const AdminUser = () => {
                 <AdminHeader />
                 <div className="user-table-container">
                     <h2 className="table-title">Users</h2>
-                    <input
-                        type="search"
-                        placeholder='Search Users'
-                        className='form-control mb-4'
-                        value={searchTerm}
-                        onChange={handleSearch}
-                    />
+                    <div className="filters">
+                        <select
+                            className="form-control mb-4 status-filter"
+                        >
+                            <option value="All">All Statuses</option>
+                            <option value="Active">Active</option>
+                            <option value="Pending">Pending</option>
+                        </select>
+                        <input
+                            type="search"
+                            placeholder='Search Users'
+                            className='form-control mb-4'
+                            value={searchTerm}
+                            onChange={handleSearch}
+                        />
+                    </div>
                     <div className="table-responsive">
                         <table className="user-table table table-striped">
                             <thead>
@@ -113,13 +180,14 @@ const AdminUser = () => {
                                     <th>Username</th>
                                     <th>Email</th>
                                     <th>Created Date</th>
+                                    <th>Status</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {loading ? (
                                     <tr>
-                                        <td colSpan="5" style={{ textAlign: 'center' }}>
+                                        <td colSpan="6" style={{ textAlign: 'center' }}>
                                             <div className="spinner-border" role="status">
                                                 <span className="visually-hidden">Loading...</span>
                                             </div>
@@ -133,7 +201,27 @@ const AdminUser = () => {
                                             </td>
                                             <td>{capitalizeFirstLetter(user.username)}</td>
                                             <td>{user.email}</td>
-                                            <td>{new Date(user.createdAt).toLocaleDateString()}</td>
+                                            <td>{new Date(user.createdAt).toLocaleDateString('en-IN')}</td>
+                                            <td>
+                                                {user.status === 'Pending' || user.status === 'Block' ? (
+                                                    <button
+                                                        className="action-btn btn-active"
+                                                        title="Activate User"
+                                                        onClick={() => handleActivate(user._id)}
+                                                    >
+                                                        Activate
+                                                    </button>
+                                                ) : (
+                                                    <button
+                                                        className="action-btn btn-block"
+                                                        title="Block User"
+                                                        onClick={() => handleBlock(user._id)}
+                                                    >
+                                                        Block
+                                                    </button>
+                                                )}
+                                            </td>
+
                                             <td>
                                                 <button
                                                     className="action-btn btn-delete"
@@ -142,13 +230,12 @@ const AdminUser = () => {
                                                 >
                                                     <FaTrash />
                                                 </button>
-                                                <button className="action-btn btn-block">Block</button>
                                             </td>
                                         </tr>
                                     ))
                                 ) : (
                                     <tr>
-                                        <td colSpan="5" style={{ textAlign: 'center' }}>No users found.</td>
+                                        <td colSpan="6" style={{ textAlign: 'center' }}>No users found.</td>
                                     </tr>
                                 )}
                             </tbody>
