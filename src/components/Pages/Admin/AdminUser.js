@@ -12,7 +12,7 @@ const AdminUser = () => {
 
     const fetchUsers = async () => {
         try {
-            const response = await fetch('http://localhost:5000/admin/user');
+            const response = await fetch(`${BaseUrl}/admin/user`);
             if (!response.ok) {
                 throw new Error('Failed to fetch users');
             }
