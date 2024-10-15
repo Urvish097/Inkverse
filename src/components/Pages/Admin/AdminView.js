@@ -12,10 +12,10 @@ const AdminView = () => {
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                const response = await fetch(`${BaseUrl}/user/view/blogs/post/${blogId}`, {
+                const response = await fetch(`${BaseUrl}/admin/view/blogs/post/${blogId}`, {
                     method: "GET",
                     headers: {
-                        authorization: `Bearer ${localStorage.getItem("token")}`,
+                        authorization: `Bearer ${localStorage.getItem("admintoken")}`,
                     }
                 });
                 const data = await response.json();
@@ -94,35 +94,6 @@ const AdminView = () => {
                     </div>
                 </div>
             </section>
-
-            <section className="subscribe_main">
-                <div className="container">
-                    <div className="subscribe text-white">
-                        <h2 className="mb-3">Sign Up for Our Newsletters</h2>
-                        <p>Get notified of the best deals on our WordPress themes.</p>
-                        <div className="position-relative subscribe_fild">
-                            <input
-                                type="email"
-                                name="email"
-                                placeholder="Enter your email"
-                                className="form-control py-3 fs-4"
-                            />
-                            <button className="subscribe_btn position-absolute btn btn-light border fs-5 px-4 py-2">
-                                Subscribe
-                            </button>
-                        </div>
-                        <div className="d-flex align-items-center mt-3 gap-3">
-                            <input type="checkbox" />
-                            <p className="mb-0">
-                                By checking this box, you confirm that you have read and are
-                                agreeing to our terms of use regarding the storage of the data
-                                submitted through this form.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
         </>
     )
 }

@@ -10,6 +10,8 @@ const AdminUser = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [loading, setLoading] = useState(false);
 
+    const token = localStorage.getItem('admintoken');
+
     const fetchUsers = async (query = '') => {
         try {
             let url = `${BaseUrl}/admin/user`;
@@ -23,13 +25,15 @@ const AdminUser = () => {
             }
 
             setLoading(true);
-            const response = await fetch(url);
+            const response = await fetch(url, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             if (!response.ok) {
                 throw new Error('Failed to fetch users');
             }
             const result = await response.json();
-
-            console.log('Fetched user data:', result);
 
             if (Array.isArray(result.data)) {
                 setUsers(result.data);
@@ -44,17 +48,51 @@ const AdminUser = () => {
         }
     };
 
+    // Function to fetch users by status
+    const fetchUsersByStatus = async (status) => {
+        try {
+            const url = `${BaseUrl}/admin/statusfilter`;
+            setLoading(true);
+            const response = await fetch(url, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            if (!response.ok) {
+                throw new Error('Failed to fetch users by status');
+            }
+            const result = await response.json();
+
+            if (result.data && result.data[status]) {
+                setUsers(result.data[status]);
+            } else {
+                setUsers([]);
+                toast.info('No users found for the selected status');
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error('Error fetching users by status');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
         fetchUsers();
     }, []);
 
+    // Handler for search input
     const handleSearch = async (e) => {
         const query = e.target.value;
         setSearchTerm(query);
 
         if (query.length > 0) {
             try {
-                const response = await fetch(`${BaseUrl}/admin/user/find?username=${query}`);
+                const response = await fetch(`${BaseUrl}/admin/user/find?username=${query}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
                 if (!response.ok) {
                     throw new Error('Failed to fetch users');
                 }
@@ -75,6 +113,16 @@ const AdminUser = () => {
         }
     };
 
+    // Handler for status filter change
+    const handleStatusChange = (e) => {
+        const selectedStatus = e.target.value;
+        if (selectedStatus === 'All') {
+            fetchUsers();
+        } else {
+            fetchUsersByStatus(selectedStatus);
+        }
+    };
+
     const handleDelete = async (userId) => {
         const isConfirmed = window.confirm('Are you sure you want to delete this user?');
         if (!isConfirmed) return;
@@ -84,6 +132,9 @@ const AdminUser = () => {
         try {
             const response = await fetch(`${BaseUrl}/admin/user/delete/${userId}`, {
                 method: 'DELETE',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
             });
 
             if (!response.ok) {
@@ -100,7 +151,6 @@ const AdminUser = () => {
         }
     };
 
-    // Updated to retain original casing
     const updateUserStatus = async (userId, status) => {
         const isConfirmed = window.confirm(`Are you sure you want to ${status.toLowerCase()} this user?`);
         if (!isConfirmed) return;
@@ -113,14 +163,13 @@ const AdminUser = () => {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
                 },
             });
 
             if (!response.ok) {
                 throw new Error(`Failed to ${status.toLowerCase()} user`);
             }
-
-            const result = await response.json();
 
             setUsers((prevUsers) =>
                 prevUsers.map((user) =>
@@ -157,17 +206,21 @@ const AdminUser = () => {
                 <div className="user-table-container">
                     <h2 className="table-title">Users</h2>
                     <div className="filters">
+                        {/* Status Filter */}
                         <select
                             className="form-control mb-4 status-filter"
+                            onChange={handleStatusChange}
                         >
                             <option value="All">All Statuses</option>
                             <option value="Active">Active</option>
                             <option value="Pending">Pending</option>
+                            <option value="Block">Block</option>
                         </select>
+                        {/* Search Filter */}
                         <input
                             type="search"
-                            placeholder='Search Users'
-                            className='form-control mb-4'
+                            placeholder="Search Users"
+                            className="form-control mb-4"
                             value={searchTerm}
                             onChange={handleSearch}
                         />

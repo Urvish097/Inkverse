@@ -10,17 +10,16 @@ import 'react-toastify/dist/ReactToastify.css';
 const Header = (props) => {
 
     const navigate = useNavigate()
-    // const userStatus = localStorage.getItem("status");
+    const userStatus = localStorage.getItem("status");
 
     const HaldelStatus = () => {
-        // if (userStatus === "Pending") {
-        //     toast.error("Your status is pending. You cannot create a Blog yet.", { autoClose: 3000 });
-        // } else if (userStatus === "Block") {
-        //     toast.error("Your Block by Admin. You cannot create a Blog Post", { autoClose: 3000 });
-        // } else {
-        //     navigate("/blog");
-        // }
-        navigate("/blog");
+        if (userStatus === "Pending") {
+            toast.error("Your status is pending. You cannot create a Blog yet.", { autoClose: 3000 });
+        } else if (userStatus === "Block") {
+            toast.error("Your Block by Admin. You cannot create a Blog Post", { autoClose: 3000 });
+        } else {
+            navigate("/blog");
+        }
     }
 
     return (

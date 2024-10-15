@@ -24,7 +24,7 @@ const AdminLogin = () => {
     };
 
     const handleSubmit = async (e) => {
-        e.preventDefault(); // Prevent default form submission
+        e.preventDefault();
 
         try {
             const response = await fetch(`${BaseUrl}/admin/login`, {

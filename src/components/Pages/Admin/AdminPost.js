@@ -48,7 +48,7 @@ const AdminPost = () => {
 
         setIsFetching(true);
         try {
-            const response = await fetch(`${BaseUrl}/admin/blog/find?title=${encodeURIComponent(query)}`, {
+            const response = await fetch(`${BaseUrl}/admin/blog/find?title=${encodeURIComponent(query)}&userId=${userId}`, {
                 method: "GET",
                 headers: {
                     authorization: `Bearer ${token}`,
@@ -62,6 +62,7 @@ const AdminPost = () => {
             const data = await response.json();
             if (data.success) {
                 setBlogs(data.data);
+                console.log(data.data,"==========>data");
             } else {
                 setBlogs([]); // Or handle according to your API's response structure
             }
@@ -94,7 +95,7 @@ const AdminPost = () => {
         setDeletingId(blogId);
 
         try {
-            const response = await fetch(`${BaseUrl}/user/deletepost/${blogId}`, {
+            const response = await fetch(`${BaseUrl}/admin/postdelete/${blogId}`, {
                 method: "DELETE",
                 headers: {
                     authorization: `Bearer ${token}`,
@@ -151,7 +152,7 @@ const AdminPost = () => {
                                             <p className='blog-publish mb-0'>
                                                 Published <span className='ms-2'>{new Date(blog.date).toLocaleDateString()}</span>
                                             </p>
-                                            <p className='blog-publish mt-2'>Created By : {blog.userId.username?.charAt(0).toUpperCase() + blog.userId.username?.slice(1)}</p>
+                                            <p className='blog-publish mt-2'>Created By : {blog?.name?.charAt(0).toUpperCase() + blog?.name?.slice(1)}</p>
                                         </div>
                                     </div>
                                     <div className='d-flex align-items-center gap-3 me-3'>
