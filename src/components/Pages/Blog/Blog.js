@@ -9,6 +9,7 @@ import { BaseUrl } from '../../services/Url';
 
 const Blog = () => {
     const [blogs, setBlogs] = useState([]);
+    const [isFetching, setIsFetching] = useState(true); // New state for initial fetch loading
     const [loading, setLoading] = useState(false);
     const [loadingId, setLoadingId] = useState(null);
     const userId = localStorage.getItem('userId');
@@ -17,6 +18,7 @@ const Blog = () => {
 
     useEffect(() => {
         const fetchBlogs = async () => {
+            setIsFetching(true); // Start loading
             try {
                 const response = await fetch(`${BaseUrl}/user/userpost/${userId}`, {
                     method: "GET",
@@ -25,10 +27,16 @@ const Blog = () => {
                     },
                 });
 
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
                 const data = await response.json();
                 setBlogs(data.data);
             } catch (error) {
                 console.error("Error fetching blogs:", error);
+            } finally {
+                setIsFetching(false); // Stop loading
             }
         };
         fetchBlogs();
@@ -40,6 +48,7 @@ const Blog = () => {
         if (!searchValue) {
             // If search value is empty, fetch all blogs again
             const fetchBlogs = async () => {
+                setIsFetching(true); // Start loading
                 try {
                     const response = await fetch(`${BaseUrl}/user/userpost/${userId}`, {
                         method: "GET",
@@ -48,16 +57,23 @@ const Blog = () => {
                         },
                     });
 
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
                     const data = await response.json();
                     setBlogs(data.data);
                 } catch (error) {
                     console.error("Error fetching blogs:", error);
+                } finally {
+                    setIsFetching(false); // Stop loading
                 }
             };
             fetchBlogs();
             return;
         }
 
+        setIsFetching(true); // Start loading
         try {
             const response = await fetch(`${BaseUrl}/user/find/blog?title=${searchValue}&userId=${userId}`, {
                 method: "GET",
@@ -65,12 +81,17 @@ const Blog = () => {
                     authorization: `Bearer ${token}`,
                 },
             });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
             const data = await response.json();
             if (data.success) {
                 setBlogs(data.data);  // Update blogs based on the search result
             }
         } catch (error) {
             console.error("Error searching blogs:", error);
+        } finally {
+            setIsFetching(false); // Stop loading
         }
     };
 
@@ -107,51 +128,59 @@ const Blog = () => {
     return (
         <>
             <div className='mb-5'>
-                <BlogHead onSearch={handleSearch} /> 
+                <BlogHead onSearch={handleSearch} />
             </div>
             <section className='Blog'>
                 <div className='container mb-4'>
                     <div className='d-flex justify-content-between align-items-center mb-5'>
                         <p className='blog-total mb-0'>All({blogs?.length})</p>
-                        <button className='btn new-post-btn d-flex justify-content-center align-items-center'>
+                        <button className=' new-post-btn d-flex justify-content-center align-items-center'>
                             <Link className='text-decoration-none text-black' to={"/CreateBlog"}>
                                 <span className='fs-4'>+</span> New Post
                             </Link>
                         </button>
                     </div>
-                    {blogs?.length > 0 ? (
-                        blogs?.map((blog) => (
-                            <div key={blog._id} className='blog-main mb-4'>
-                                <div className='d-flex justify-content-md-between flex-wrap align-items-center'>
-                                    <div className='d-flex gap-4 align-items-center'>
-                                        <div className='title'>
-                                            <img src={blog.blogimg} className='Blog-title-image' alt="Title-image" />
+
+                    {isFetching ? (
+                        <div className="loader-container-blog">
+                            <div className="spinner-blog"></div>
+                            {/* You can replace the above div with any loader component or animation */}
+                        </div>
+                    ) : (
+                        blogs?.length > 0 ? (
+                            blogs.map((blog) => (
+                                <div key={blog._id} className='blog-main mb-4'>
+                                    <div className='d-flex justify-content-md-between flex-wrap align-items-center'>
+                                        <div className='d-flex gap-4 align-items-center'>
+                                            <div className='title'>
+                                                <img src={blog.blogimg} className='Blog-title-image' alt="Title-image" />
+                                            </div>
+                                            <div>
+                                                <p className='blog-name mb-1'>{blog.title}</p>
+                                                <p className='blog-publish mb-0'>Published <span className='ms-2'>{new Date(blog.date).toLocaleDateString()}</span></p>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <p className='blog-name mb-1'>{blog.title}</p>
-                                            <p className='blog-publish mb-0'>Published <span className='ms-2'>{new Date(blog.date).toLocaleDateString()}</span></p>
+                                        <div className='d-flex align-items-center gap-3'>
+                                            {loading && loadingId === blog._id ? (
+                                                <div className="spinner"></div>
+                                            ) : (
+                                                <>
+                                                    <span onClick={(e) => handleDeleteClick(blog._id, e)} role="button" aria-label="Delete Blog">
+                                                        <MdDelete className='fs-4' />
+                                                    </span>
+                                                    <span onClick={() => handleEditClick(blog)} role="button" aria-label="Edit Blog">
+                                                        <FaEdit className='fs-4' />
+                                                    </span>
+                                                    <span><IoMdShare className='fs-4' /></span>
+                                                </>
+                                            )}
                                         </div>
-                                    </div>
-                                    <div className='d-flex align-items-center gap-3'>
-                                        {loading && loadingId === blog._id ? (
-                                            <div className="spinner"></div>
-                                        ) : (
-                                            <>
-                                                <span onClick={(e) => handleDeleteClick(blog._id, e)} role="button" aria-label="Delete Blog">
-                                                    <MdDelete className='fs-4' />
-                                                </span>
-                                                <span onClick={() => handleEditClick(blog)} role="button" aria-label="Edit Blog">
-                                                    <FaEdit className='fs-4' />
-                                                </span>
-                                                <span><IoMdShare className='fs-4' /></span>
-                                            </>
-                                        )}
                                     </div>
                                 </div>
-                            </div>
-                        ))
-                    ) : (
-                        <h5 className='text-center Europa_Bold'>No Blogs Found.</h5>
+                            ))
+                        ) : (
+                            <h5 className='text-center Europa_Bold'>No Blogs Found.</h5>
+                        )
                     )}
                 </div>
             </section>

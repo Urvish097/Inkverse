@@ -1,10 +1,10 @@
 import React from 'react';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import logo from '../Images/Logo.png';
 import './Header.css';
 import { Navbar } from "../Data/Data";
 import { IoIosSearch } from "react-icons/io";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Header = (props) => {

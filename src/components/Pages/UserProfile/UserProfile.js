@@ -6,6 +6,7 @@ import { BaseUrl } from '../../services/Url';
 
 const UserProfile = () => {
     const [userData, setUserData] = useState({});
+    const [loading, setLoading] = useState(true);  // Loading state
     const token = localStorage.getItem('token');
     const navigate = useNavigate();
 
@@ -30,6 +31,8 @@ const UserProfile = () => {
                 }
             } catch (error) {
                 console.error('Fetch error:', error);
+            } finally {
+                setLoading(false); // Hide loader after data is fetched
             }
         };
 
@@ -49,63 +52,72 @@ const UserProfile = () => {
             <div className="container">
                 <div className="main-body">
                     <div className="row gutters-sm justify-content-center">
-                        <div className="col-lg-12 mb-5 mt-4">
-                            <div className="card">
-                                <div className="card-body">
-                                    <div className="d-flex flex-column align-items-center text-center">
-                                        <img
-                                            src={userData.profile}
-                                            alt="User"
-                                            className="profileimage"
-                                        />
-                                        <div className="mt-3">
-                                            <h4>{userData.username}</h4>
-                                        </div>
-                                    </div>
-                                </div>
+                        {loading ? (
+                            // Display loader while fetching data
+                            <div className="loader-container-profile">
+                                <div className="loader-profile"></div>
                             </div>
-                        </div>
-                        <div className="col-md-10">
-                            <div className="card card_shadow mb-3">
-                                <div className="card-body">
-                                    <div className="row">
-                                        <div className="col-sm-3">
-                                            <h6 className="mb-0">Full Name</h6>
-                                        </div>
-                                        <div className="col-sm-9 text-secondary">{userData.fname || "N/A"}</div>
-                                    </div>
-                                    <hr />
-                                    <div className="row">
-                                        <div className="col-sm-3">
-                                            <h6 className="mb-0">Username</h6>
-                                        </div>
-                                        <div className="col-sm-9 text-secondary">{userData.username || "N/A"}</div>
-                                    </div>
-                                    <hr />
-                                    <div className="row">
-                                        <div className="col-sm-3">
-                                            <h6 className="mb-0">Email</h6>
-                                        </div>
-                                        <div className="col-sm-9 text-secondary">{userData.email || "N/A"}</div>
-                                    </div>
-                                    <hr />
-                                    <div className="row">
-                                        <div className="col-sm-12">
-                                            <div className='d-flex justify-content-between'>
-                                                <Link
-                                                    to={`/UserProfileUpdate/${userData._id}`}
-                                                    state={{ user: userData }}
-                                                    className="btn btn-info fw-semibold"
-                                                >
-                                                    Edit
-                                                </Link>
-                                                <button className='btn btn-danger fw-semibold' onClick={handleLogout}>Log Out</button>
+                        ) : (
+                            <>
+                                <div className="col-lg-12 mb-5 mt-4">
+                                    <div className="card">
+                                        <div className="card-body">
+                                            <div className="d-flex flex-column align-items-center text-center">
+                                                <img
+                                                    src={userData.profile}
+                                                    alt="User"
+                                                    className="profileimage"
+                                                />
+                                                <div className="mt-3">
+                                                    <h4>{userData.username}</h4>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
+                                <div className="col-md-10">
+                                    <div className="card card_shadow mb-3">
+                                        <div className="card-body">
+                                            <div className="row">
+                                                <div className="col-sm-3">
+                                                    <h6 className="mb-0">Full Name</h6>
+                                                </div>
+                                                <div className="col-sm-9 text-secondary">{userData.fname || "N/A"}</div>
+                                            </div>
+                                            <hr />
+                                            <div className="row">
+                                                <div className="col-sm-3">
+                                                    <h6 className="mb-0">Username</h6>
+                                                </div>
+                                                <div className="col-sm-9 text-secondary">{userData.username || "N/A"}</div>
+                                            </div>
+                                            <hr />
+                                            <div className="row">
+                                                <div className="col-sm-3">
+                                                    <h6 className="mb-0">Email</h6>
+                                                </div>
+                                                <div className="col-sm-9 text-secondary">{userData.email || "N/A"}</div>
+                                            </div>
+                                            <hr />
+                                            <div className="row">
+                                                <div className="col-sm-12">
+                                                    <div className='d-flex justify-content-between'>
+                                                        <Link
+                                                            to={`/UserProfileUpdate/${userData._id}`}
+                                                            state={{ user: userData }}
+                                                            className="btn btn-info fw-semibold"
+                                                        >
+                                                            Edit
+                                                        </Link>
+                                                        <button className='btn btn-danger fw-semibold' onClick={handleLogout}>Log Out</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
             </div>

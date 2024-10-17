@@ -21,6 +21,8 @@ import AdminPost from './components/Pages/Admin/AdminPost';
 import AdminUser from './components/Pages/Admin/AdminUser';
 import AdminView from './components/Pages/Admin/AdminView';
 import AdminLogin from './components/Pages/Admin/AdminLogin';
+import Advertisement from './components/Pages/Advertisement/Advertisement';
+import AdminAdvertisement from './components/Pages/Admin/AdminAdvertisement';
 
 function App() {
 
@@ -83,6 +85,7 @@ function ContentWithFooter() {
         <Route path='/login' element={<Login />} />
         <Route path='/Register' element={<SignUp />} />
         <Route path='/Email' element={<Email />} />
+        <Route path='/AdminAdvertisement' element={<AdminAdvertisement />} />
         <Route element={<AdminPrivateRoute />}>
           <Route path='/AdminPanel' element={<Admin />} />
           <Route path='/Adminpost' element={<AdminPost />} />
@@ -96,6 +99,7 @@ function ContentWithFooter() {
           <Route path='/CreateBlog' element={<CreateBlog />} />
           <Route path='/UserProfile' element={<UserProfile />} />
           <Route path='/UserProfileUpdate/:userId' element={<UpdateProfile />} />
+          <Route path='/Advertisement' element={<Advertisement />} />
         </Route>
         <Route element={<PrivateRouteOtp />}>
           <Route path='/Otp/:userId' element={<Otp />} />

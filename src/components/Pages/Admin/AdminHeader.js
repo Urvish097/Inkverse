@@ -4,6 +4,7 @@ import Logo from '../../Images/Logo.png';
 import { IoHomeSharp } from 'react-icons/io5';
 import { FaUsers, FaNewspaper, FaSignOutAlt } from 'react-icons/fa';
 import { NavLink } from 'react-router-dom';
+import { RiAdvertisementFill } from "react-icons/ri";
 
 const AdminHeader = () => {
     const handleLogout = () => {
@@ -39,6 +40,14 @@ const AdminHeader = () => {
                     }
                 >
                     <FaNewspaper className="icon" /> Blogs
+                </NavLink>
+                <NavLink
+                    to="/AdminAdvertisement"
+                    className={({ isActive }) =>
+                        isActive ? 'menu-item active-menu-item text-decoration-none text-white' : 'menu-item text-decoration-none text-white'
+                    }
+                >
+                    <RiAdvertisementFill className="icon" /> Advertisement
                 </NavLink>
                 <button onClick={handleLogout} className="logout-button">
                     <FaSignOutAlt className="logout-icon" /> Logout

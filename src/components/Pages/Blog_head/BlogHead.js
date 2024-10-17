@@ -5,7 +5,7 @@ import './BlogHead.css';
 import { IoSearchSharp } from "react-icons/io5";
 import { BaseUrl } from '../../services/Url';
 
-const BlogHead = ({ onSearch }) => {
+const BlogHead = ({ onSearch, display }) => {
 
   const [userData, setUserData] = useState({});
   const token = localStorage.getItem('token');
@@ -63,9 +63,10 @@ const BlogHead = ({ onSearch }) => {
                 placeholder='Search Posts'
                 value={searchValue}
                 onChange={handleSearchChange}
+                style={{ display: display }}
               />
               <span className='search-icon-blog position-absolute'>
-                <IoSearchSharp className='fs-5' />
+                <IoSearchSharp className='fs-5' style={{ display: display }} />
               </span>
             </div>
             <div className='profile-logo'>

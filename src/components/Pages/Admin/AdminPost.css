@@ -1,20 +1,20 @@
 .adminBlog {
     width: 100%;
-    max-width: 1200px; 
+    max-width: 1200px;
     padding: 20px;
     box-sizing: border-box;
 }
 
 .adminBlog .container {
     width: 100%;
-    max-width: 100%; 
-    margin: 0 auto; 
-    padding: 0 15px; 
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 15px;
     box-sizing: border-box;
 }
 
 .search-input {
-    width: 100%; 
+    width: 100%;
     padding: 10px 15px;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -28,7 +28,7 @@
 }
 
 .adminBlog .blog-main {
-    width: 100%; 
+    width: 100%;
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -38,7 +38,7 @@
 
 .adminBlog .blog-content-wrapper {
     width: 100%;
-    flex-direction: column; 
+    flex-direction: column;
 }
 
 @media (min-width: 768px) {
@@ -84,9 +84,17 @@
     animation: spin 1s linear infinite;
     margin: 0 auto;
 }
+.ad-profile-img {
+    border-radius: 100%;
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+}
 
 @keyframes spin {
-    to { transform: rotate(360deg); }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 @media (max-width: 767px) {

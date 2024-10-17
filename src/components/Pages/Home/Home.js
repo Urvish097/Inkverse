@@ -5,7 +5,9 @@ import Postcard from '../../Cards/Card/Postcard';
 import Descard from '../../Cards/Descard/Descard';
 import { Categary, Destination } from '../../Data/Data';
 import { BaseUrl } from '../../services/Url';
-
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import Slider from "react-slick";
 import { Link } from 'react-router-dom';
 
 const Home = () => {
@@ -53,13 +55,57 @@ const Home = () => {
     const filteredData = selectedCategory
         ? categoryData.filter((item) => item.category === selectedCategory)
         : categoryData;
-        
+
     useEffect(() => {
         fetchCategoryBlogs(selectedCategory);
     }, [selectedCategory]);
 
     const handleToggle = () => {
         setShowAll(!showAll);
+    };
+
+    const settings = {
+        dots: false,
+        infinite: true,
+        speed: 500,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        autoplaySpeed: 500,
+        autoplay: true,
+        arrows: false,
+        adaptiveHeight: true,
+        responsive: [
+            {
+                breakpoint: 1200,
+                settings: {
+                    slidesToShow: 1,
+                }
+            },
+            {
+                breakpoint: 992,
+                settings: {
+                    slidesToShow: 1,
+                }
+            },
+            {
+                breakpoint: 768,
+                settings: {
+                    slidesToShow: 1,
+                }
+            },
+            {
+                breakpoint: 576,
+                settings: {
+                    slidesToShow: 1,
+                }
+            },
+            {
+                breakpoint: 480,
+                settings: {
+                    slidesToShow: 1,
+                }
+            }
+        ]
     };
 
     return (
@@ -109,6 +155,37 @@ const Home = () => {
                             </p>
                             <button className='Europa_Bold plannig-btn'>Explore the Stories</button>
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            <section className='advertisement-section mb-3'>
+                <div className='container'>
+                    <Slider {...settings} className='advertisement-slider mb-3'>
+                        <div className='slide'>
+                            <img
+                                className='advertisement-image'
+                                src="https://i.ytimg.com/vi/tYcxuRZfB0g/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLB0oZUmYfpDp5MR3w1hkVKVLJzfqA"
+                                alt="Advertisement 1"
+                            />
+                        </div>
+                        <div className='slide'>
+                            <img
+                                className='advertisement-image'
+                                src="https://rukminim2.flixcart.com/image/720/864/km0x5zk0/board-game/s/7/9/ww-challengers-raw-deal-travel-board-game-holiday-game-great-for-original-imagfysdvn5xyqkh.jpeg?q=60&crop=false"
+                                alt="Advertisement 2"
+                            />
+                        </div>
+                        <div className='slide'>
+                            <img
+                                className='advertisement-image'
+                                src="https://media.licdn.com/dms/image/v2/D5622AQH6jilI799vOw/feedshare-shrink_800/feedshare-shrink_800/0/1712901058383?e=2147483647&v=beta&t=F9H8AQFOaUNbv7AlleGr53vEVfaOQN1tvtOs8oQl3DM"
+                                alt="Advertisement 3"
+                            />
+                        </div>
+                    </Slider>
+                    <div className='text-center'>
+                        <Link className='btn btn-primary btn-lg' to={"/Advertisement"}>Advertise Now</Link>
                     </div>
                 </div>
             </section>
