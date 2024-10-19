@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import BlogHead from '../Blog_head/BlogHead';
 import './Advertisement.css';
 import { toast, ToastContainer } from 'react-toastify';
+import { load } from '@cashfreepayments/cashfree-js';
+import { BaseUrl } from '../../services/Url';
 
 const Advertisement = () => {
     const [showModal, setShowModal] = useState(false);
@@ -10,16 +12,98 @@ const Advertisement = () => {
     const [title, setTitle] = useState('');
     const [poster, setPoster] = useState(null);
     const [loading, setLoading] = useState(false); // Loader state
-    const [ads, setAds] = useState([]); // State to store fetched ads
+    const [ads, setAds] = useState([]);
+    const [disable, setDisable] = useState(0);
+    const [cashfree, setCashfree] = useState(null);
 
-    const userId = localStorage.getItem('userId'); // Assuming userId is stored in localStorage
+    const userId = localStorage.getItem('userId');
+    let orderId = "";
 
-    // Fetch user's advertisements
+    useEffect(() => {
+        const initializeSDK = async () => {
+            try {
+                const cfInstance = await load({
+                    mode: "sandbox", // Set the mode ('sandbox' or 'production')
+                });
+                setCashfree(cfInstance);
+            } catch (error) {
+                console.error("Failed to load Cashfree SDK", error);
+                toast.error("Failed to load payment gateway");
+            }
+        };
+
+        initializeSDK();
+    }, []);
+
+    const getSessionId = async (adId) => {
+        try {
+            const res = await fetch(`${BaseUrl}/user/payment/${adId}`);
+            if (res.ok) {
+                const data = await res.json();
+                orderId = data.data.order_id
+                return data.data.payment_session_id;
+            } else {
+                console.log("Error:", res.statusText);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const verifyPayment = async (adId) => {
+        try {
+            const res = await fetch(`${BaseUrl}/user/payment/verfy/${orderId}/${adId}`);
+
+            if (res.ok) {
+                const data = await res.json();
+                console.log(data, ">>>>>>>>data");
+
+                if (data) {
+                    alert("Payment verified");
+                }
+            } else {
+                console.log("Error:", res.statusText);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    const handleClick = async (adId) => {
+        try {
+            const sessionId = await getSessionId(adId);
+            console.log(sessionId, "=====>");
+
+            if (cashfree) {
+                const checkoutOptions = {
+                    paymentSessionId: sessionId,
+                    redirectTarget: "_modal", // Open in a modal
+                };
+
+                cashfree.checkout(checkoutOptions)
+                    .then(() => {
+                        console.log("Payment Initialized");
+                    }).then(() => {
+                        verifyPayment(adId)
+                    })
+                    .catch((error) => {
+                        console.error("Error during checkout:", error);
+                        toast.error("Payment initialization failed");
+                    });
+            } else {
+                toast.error("Payment gateway not initialized");
+            }
+        } catch (error) {
+            console.log(error);
+            toast.error("An error occurred during payment processing");
+        }
+    };
+
     useEffect(() => {
         const fetchAds = async () => {
-            setLoading(true); // Start loader
+            setLoading(true);
             try {
-                const response = await fetch(`http://localhost:5000/user/allad/${userId}`, {
+                const response = await fetch(`${BaseUrl}/user/allad/${userId}`, {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -29,7 +113,8 @@ const Advertisement = () => {
                 const data = await response.json();
 
                 if (response.ok) {
-                    setAds(data.data); // Set the fetched ads
+                    setAds(data.data);
+                    setDisable(data.data.paynow);
                 } else {
                     toast.error(data.message || 'Failed to fetch advertisements');
                 }
@@ -67,7 +152,7 @@ const Advertisement = () => {
 
         try {
             setLoading(true); // Start loading
-            const response = await fetch('http://localhost:5000/user/ad', {
+            const response = await fetch(`${BaseUrl}/user/ad`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -151,7 +236,7 @@ const Advertisement = () => {
                                         </div>
                                     </div>
                                     <div className='d-flex align-items-center gap-3'>
-                                        <button className='btn btn-success'>Pay Now</button>
+                                        <button className='btn btn-success' disabled={!ad.paynow} onClick={() => handleClick(ad._id)} >Pay Now</button>
                                     </div>
                                 </div>
                             </div>
@@ -205,35 +290,30 @@ const Advertisement = () => {
                                 </select>
                             </div>
                             <div className="form-group">
-                                <label htmlFor="price">Price ($)</label>
+                                <label htmlFor="price">Price</label>
                                 <input
-                                    type="number"
+                                    type="text"
                                     id="price"
                                     name="price"
                                     value={price}
-                                    readOnly
-                                    required
+                                    disabled
                                     className="form-input"
-                                    min="0"
-                                    step="0.01"
                                 />
                             </div>
-                            <div className="form-actions">
-                                <button type="button" className="btn btn-secondary" onClick={handleCloseModal}>
-                                    Cancel
-                                </button>
+                            <div className="modal-actions d-flex justify-content-between">
                                 <button type="submit" className="btn btn-primary">
-                                    Submit
+                                    {loading ? "Creating..." : "Create Advertisement"}
+                                </button>
+                                <button
+                                    type="button"
+                                    className="btn btn-secondary"
+                                    onClick={handleCloseModal}
+                                >
+                                    Cancel
                                 </button>
                             </div>
                         </form>
                     </div>
-                </div>
-            )}
-
-            {loading && (
-                <div className="loader-overlay-ad">
-                    <div className="loader-ad"></div>
                 </div>
             )}
 

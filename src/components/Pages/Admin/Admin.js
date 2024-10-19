@@ -5,7 +5,6 @@ import './Admin.css';
 import AdminHeader from './AdminHeader';
 import { BaseUrl } from '../../services/Url';
 
-
 const ApexChart = ({ blogData }) => {
     const chartOptions = {
         series: [
@@ -211,20 +210,21 @@ const ApexChartEarnings = ({ earningData }) => {
 const Admin = () => {
     const [totalUsers, setTotalUsers] = useState(0);
     const [totalBlogs, setTotalBlogs] = useState(0);
-    const [totalAds, setTotalAds] = useState(0); // State for Total Ads
-    const [totalEarning, setTotalEarning] = useState(0); // State for Total Earning
+    const [totalAds, setTotalAds] = useState(0);
+    const [totalEarning, setTotalEarning] = useState(0);
     const token = localStorage.getItem('admintoken');
     const [loading, setLoading] = useState(true);
     const [monthlyBlogData, setMonthlyBlogData] = useState([]);
-    const [monthlyEaring, setmonthlyEaring] = useState([]);
+    const [monthlyEarnings, setMonthlyEarnings] = useState([]);
 
+    // Fetch dashboard data
     useEffect(() => {
         const fetchDashboardData = async () => {
             try {
                 const dashboardResponse = await fetch(`${BaseUrl}/admin/dashboard`, {
                     method: 'GET',
                     headers: {
-                        'Authorization': `Bearer ${token}`,
+                        Authorization: `Bearer ${token}`,
                         'Content-Type': 'application/json',
                     },
                 });
@@ -238,14 +238,25 @@ const Admin = () => {
                 if (dashboardData.success) {
                     setTotalUsers(dashboardData.data.TotalUser || 0);
                     setTotalBlogs(dashboardData.data.TotalBlog || 0);
-                    setTotalAds(dashboardData.data.TotalAds || 0); // Assuming API returns TotalAds
-                    setTotalEarning(dashboardData.data.TotalEarning || 0); // Assuming API returns TotalEarning
+                    setTotalAds(dashboardData.data.TotalAds || 0);
+                    setTotalEarning(dashboardData.data.TotalEarning || 0);
                 }
+            } catch (error) {
+                console.error('Error fetching dashboard data:', error);
+            }
+        };
 
+        fetchDashboardData();
+    }, [token]);
+
+    // Fetch blog chart data
+    useEffect(() => {
+        const fetchBlogChartData = async () => {
+            try {
                 const chartResponse = await fetch(`${BaseUrl}/admin/chart`, {
                     method: 'GET',
                     headers: {
-                        'Authorization': `Bearer ${token}`,
+                        Authorization: `Bearer ${token}`,
                         'Content-Type': 'application/json',
                     },
                 });
@@ -260,14 +271,48 @@ const Admin = () => {
                     setMonthlyBlogData(chartData.data);
                 }
             } catch (error) {
-                console.error('Error fetching data:', error);
-            } finally {
-                setLoading(false);
+                console.error('Error fetching blog chart data:', error);
             }
         };
 
-        fetchDashboardData();
+        fetchBlogChartData();
     }, [token]);
+
+    // Fetch earnings chart data
+    useEffect(() => {
+        const fetchEarningChartData = async () => {
+            try {
+                const earningResponse = await fetch(`${BaseUrl}/admin/Earningchart`, {
+                    method: 'GET',
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (!earningResponse.ok) {
+                    throw new Error(`HTTP error! status: ${earningResponse.status}`);
+                }
+
+                const earningData = await earningResponse.json();
+
+                if (earningData.success) {
+                    setMonthlyEarnings(earningData.monthlyEarnings);
+                }
+            } catch (error) {
+                console.error('Error fetching earning chart data:', error);
+            }
+        };
+
+        fetchEarningChartData();
+    }, [token]);
+
+    // Handle loading state
+    useEffect(() => {
+        if (totalUsers || totalBlogs || totalAds || totalEarning || monthlyBlogData.length || monthlyEarnings.length) {
+            setLoading(false);
+        }
+    }, [totalUsers, totalBlogs, totalAds, totalEarning, monthlyBlogData, monthlyEarnings]);
 
     if (loading) {
         return <div className="loading">Loading...</div>;
@@ -285,53 +330,44 @@ const Admin = () => {
                             <FaUsers className="card-icon" />
                         </div>
                         <div className="card-content">
-                            <h4 className="card-title">Total Users</h4>
-                            <p className="card-value">{totalUsers}</p>
+                            <h3>{totalUsers}</h3>
+                            <p>Total Users</p>
                         </div>
                     </div>
-
                     {/* Total Blogs Card */}
                     <div className="card">
                         <div className="icon-bg">
                             <FaNewspaper className="card-icon" />
                         </div>
                         <div className="card-content">
-                            <h4 className="card-title">Total Blogs</h4>
-                            <p className="card-value">{totalBlogs}</p>
+                            <h3>{totalBlogs}</h3>
+                            <p>Total Blogs</p>
                         </div>
                     </div>
-
                     {/* Total Ads Card */}
                     <div className="card">
                         <div className="icon-bg">
                             <FaAd className="card-icon" />
                         </div>
                         <div className="card-content">
-                            <h4 className="card-title">Total Ads</h4>
-                            <p className="card-value">{totalAds}</p>
+                            <h3>{totalAds}</h3>
+                            <p>Total Ads</p>
                         </div>
                     </div>
-
-                    {/* Total Earning Card */}
+                    {/* Total Earnings Card */}
                     <div className="card">
                         <div className="icon-bg">
                             <FaDollarSign className="card-icon" />
                         </div>
                         <div className="card-content">
-                            <h4 className="card-title">Total Earning</h4>
-                            <p className="card-value">${totalEarning}</p>
+                            <h3>${totalEarning}</h3>
+                            <p>Total Earnings</p>
                         </div>
                     </div>
                 </div>
-
-                {/* Monthly Blog Chart */}
-                <div className="chart-section mb-5">
+                <div className="charts-container">
                     <ApexChart blogData={monthlyBlogData} />
-                </div>
-
-                {/* Monthly Earnings Chart */}
-                <div className="chart-section">
-                    <ApexChartEarnings earningData={""} />
+                    <ApexChartEarnings earningData={monthlyEarnings} />
                 </div>
             </main>
         </section>
