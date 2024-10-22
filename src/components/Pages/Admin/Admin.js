@@ -211,7 +211,7 @@ const Admin = () => {
     const [totalUsers, setTotalUsers] = useState(0);
     const [totalBlogs, setTotalBlogs] = useState(0);
     const [totalAds, setTotalAds] = useState(0);
-    const [totalEarning, setTotalEarning] = useState(0);
+    const [Earning, setTotalEarning] = useState(0);
     const token = localStorage.getItem('admintoken');
     const [loading, setLoading] = useState(true);
     const [monthlyBlogData, setMonthlyBlogData] = useState([]);
@@ -239,7 +239,7 @@ const Admin = () => {
                     setTotalUsers(dashboardData.data.TotalUser || 0);
                     setTotalBlogs(dashboardData.data.TotalBlog || 0);
                     setTotalAds(dashboardData.data.TotalAds || 0);
-                    setTotalEarning(dashboardData.data.TotalEarning || 0);
+                    setTotalEarning(dashboardData.data.Earning || 0);
                 }
             } catch (error) {
                 console.error('Error fetching dashboard data:', error);
@@ -309,10 +309,10 @@ const Admin = () => {
 
     // Handle loading state
     useEffect(() => {
-        if (totalUsers || totalBlogs || totalAds || totalEarning || monthlyBlogData.length || monthlyEarnings.length) {
+        if (totalUsers || totalBlogs || totalAds || Earning || monthlyBlogData.length || monthlyEarnings.length) {
             setLoading(false);
         }
-    }, [totalUsers, totalBlogs, totalAds, totalEarning, monthlyBlogData, monthlyEarnings]);
+    }, [totalUsers, totalBlogs, totalAds, Earning, monthlyBlogData, monthlyEarnings]);
 
     if (loading) {
         return <div className="loading">Loading...</div>;
@@ -360,7 +360,7 @@ const Admin = () => {
                             <FaDollarSign className="card-icon" />
                         </div>
                         <div className="card-content">
-                            <h3>${totalEarning}</h3>
+                            <h3>${Earning}</h3>
                             <p>Total Earnings</p>
                         </div>
                     </div>

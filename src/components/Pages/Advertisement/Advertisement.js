@@ -7,14 +7,16 @@ import { BaseUrl } from '../../services/Url';
 
 const Advertisement = () => {
     const [showModal, setShowModal] = useState(false);
-    const [price, setPrice] = useState(999); // Default price for 7 days
+    const [price, setPrice] = useState(999);
     const [duration, setDuration] = useState('7 days');
     const [title, setTitle] = useState('');
+    const [phone, setphone] = useState('')
     const [poster, setPoster] = useState(null);
-    const [loading, setLoading] = useState(false); // Loader state
+    const [loading, setLoading] = useState(false);
     const [ads, setAds] = useState([]);
     const [disable, setDisable] = useState(0);
     const [cashfree, setCashfree] = useState(null);
+    const [currentFilter, setCurrentFilter] = useState('all');
 
     const userId = localStorage.getItem('userId');
     let orderId = "";
@@ -23,7 +25,7 @@ const Advertisement = () => {
         const initializeSDK = async () => {
             try {
                 const cfInstance = await load({
-                    mode: "sandbox", // Set the mode ('sandbox' or 'production')
+                    mode: "sandbox",
                 });
                 setCashfree(cfInstance);
             } catch (error) {
@@ -60,6 +62,7 @@ const Advertisement = () => {
 
                 if (data) {
                     alert("Payment verified");
+                    fetchAds()
                 }
             } else {
                 console.log("Error:", res.statusText);
@@ -77,7 +80,7 @@ const Advertisement = () => {
             if (cashfree) {
                 const checkoutOptions = {
                     paymentSessionId: sessionId,
-                    redirectTarget: "_modal", // Open in a modal
+                    redirectTarget: "_modal",
                 };
 
                 cashfree.checkout(checkoutOptions)
@@ -98,33 +101,32 @@ const Advertisement = () => {
             toast.error("An error occurred during payment processing");
         }
     };
+    const fetchAds = async () => {
+        setLoading(true);
+        try {
+            const response = await fetch(`${BaseUrl}/user/allad/${userId}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                },
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                setAds(data.data);
+                setDisable(data.data.paynow);
+            } else {
+                toast.error(data.message || 'Failed to fetch advertisements');
+            }
+        } catch (error) {
+            toast.error('Something went wrong while fetching ads');
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        const fetchAds = async () => {
-            setLoading(true);
-            try {
-                const response = await fetch(`${BaseUrl}/user/allad/${userId}`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`,
-                    },
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    setAds(data.data);
-                    setDisable(data.data.paynow);
-                } else {
-                    toast.error(data.message || 'Failed to fetch advertisements');
-                }
-            } catch (error) {
-                toast.error('Something went wrong while fetching ads');
-            } finally {
-                setLoading(false); // Stop loader
-            }
-        };
-
         fetchAds();
     }, [userId]);
 
@@ -149,9 +151,10 @@ const Advertisement = () => {
         formData.append('ad_duration', duration);
         formData.append('price', price);
         formData.append('poster', poster);
+        formData.append('phone', phone)
 
         try {
-            setLoading(true); // Start loading
+            setLoading(true);
             const response = await fetch(`${BaseUrl}/user/ad`, {
                 method: 'POST',
                 headers: {
@@ -176,7 +179,7 @@ const Advertisement = () => {
         } catch (error) {
             toast.error('Something went wrong, please try again later');
         } finally {
-            setLoading(false); // Stop loading
+            setLoading(false);
         }
     };
 
@@ -191,6 +194,37 @@ const Advertisement = () => {
         } else if (selectedDuration === '30 days') {
             setPrice(3799);
         }
+    };
+
+    const fetchFilteredAds = async (filter) => {
+        setLoading(true);
+        try {
+            const response = await fetch(`${BaseUrl}/user/adFilter`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                },
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                // Filter ads based on the selected filter
+                const filteredAds = filter === 'active' ? data.data.active : filter === 'pending' ? data.data.pending : data.data;
+                setAds(filteredAds);
+            } else {
+                toast.error(data.message || 'Failed to fetch advertisements');
+            }
+        } catch (error) {
+            toast.error('Something went wrong while fetching ads');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleClickfilter = (filter) => {
+        setCurrentFilter(filter);
+        fetchFilteredAds(filter);
     };
 
     return (
@@ -211,10 +245,11 @@ const Advertisement = () => {
                     </div>
 
                     <div className='d-flex gap-3 mb-5'>
-                        <button className='btn btn-warning'>Pending</button>
-                        <button className='btn btn-success'>Active</button>
+                        <button className='btn btn-warning' onClick={() => handleClickfilter('pending')}>Pending</button>
+                        <button className='btn btn-success' onClick={() => handleClickfilter('active')}>Active</button>
                         <button className='btn btn-success'>Invoice</button>
                     </div>
+
 
                     {ads.length === 0 ? (
                         <h3 className='text-center'>No advertisements found.</h3>
@@ -236,7 +271,15 @@ const Advertisement = () => {
                                         </div>
                                     </div>
                                     <div className='d-flex align-items-center gap-3'>
-                                        <button className='btn btn-success' disabled={!ad.paynow} onClick={() => handleClick(ad._id)} >Pay Now</button>
+                                        {ad.paymentClear ? (
+                                            <button className='btn btn-secondary' disabled>
+                                                Paid
+                                            </button>
+                                        ) : (
+                                            <button className='btn btn-success' disabled={!ad.paynow} onClick={() => handleClick(ad._id)}>
+                                                Pay Now
+                                            </button>
+                                        )}
                                     </div>
                                 </div>
                             </div>
@@ -258,6 +301,23 @@ const Advertisement = () => {
                                     name="title"
                                     value={title}
                                     onChange={(e) => setTitle(e.target.value)}
+                                    required
+                                    className="form-input"
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="Phone">Phone No</label>
+                                <input
+                                    type="text"
+                                    id="number"
+                                    name="phone"
+                                    value={phone}
+                                    onChange={(e) => {
+                                        const inputValue = e.target.value;
+                                        if (/^\d*$/.test(inputValue) && inputValue.length <= 10) {
+                                            setphone(inputValue);
+                                        }
+                                    }}
                                     required
                                     className="form-input"
                                 />
@@ -316,7 +376,6 @@ const Advertisement = () => {
                     </div>
                 </div>
             )}
-
             <ToastContainer />
         </>
     );

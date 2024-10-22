@@ -5,19 +5,18 @@ import "./AdminAdvertisement.css";
 import { BaseUrl } from '../../services/Url';
 
 const AdminAdvertisement = () => {
-    const [isChecked, setIsChecked] = useState(false);
     const [ads, setAds] = useState([]);
 
     // Fetch ads data from the API with token
     useEffect(() => {
         const fetchAds = async () => {
             try {
-                const token = localStorage.getItem('admintoken'); // Assuming the token is stored in localStorage
+                const token = localStorage.getItem('admintoken');
                 const response = await fetch(`${BaseUrl}/admin/allAds`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}` // Pass the token in the Authorization header
+                        'Authorization': `Bearer ${token}`
                     }
                 });
 
@@ -36,8 +35,62 @@ const AdminAdvertisement = () => {
         fetchAds();
     }, []);
 
-    const handleToggle = () => {
-        setIsChecked(!isChecked);
+    // Handle toggle switch
+    const handleToggle = async (adId) => {
+        try {
+            const token = localStorage.getItem('admintoken');
+            const response = await fetch(`${BaseUrl}/admin/enableForPayment/${adId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                // Update the ad's state to disable the toggle
+                setAds(prevAds =>
+                    prevAds.map(ad =>
+                        ad._id === adId ? { ...ad, paynow: 1 } : ad
+                    )
+                );
+            } else {
+                console.error(result.message);
+            }
+        } catch (error) {
+            console.error('Error enabling payment:', error);
+        }
+    };
+
+    // Handle Active button click to activate ad status
+    const handleStatusActive = async (adId) => {
+        try {
+            const token = localStorage.getItem('admintoken');
+            const response = await fetch(`${BaseUrl}/admin/statusActive/${adId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                // Update the ad's status to "active" and disable the button
+                setAds(prevAds =>
+                    prevAds.map(ad =>
+                        ad._id === adId ? { ...ad, status: 'active' } : ad
+                    )
+                );
+            } else {
+                console.error(result.message);
+            }
+        } catch (error) {
+            console.error('Error activating ad status:', error);
+        }
     };
 
     return (
@@ -65,17 +118,34 @@ const AdminAdvertisement = () => {
                                         </div>
                                     </div>
                                     <div>
-                                        Payment <GoDotFill className='text-success' />
+                                        Payment
+                                        <GoDotFill
+                                            className={ad.paymentClear ? 'text-success fs-4' : 'text-danger fs-4'}
+                                        />
                                     </div>
                                     <div className="form-check form-switch">
-                                        <input className="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" checked={isChecked} onChange={handleToggle} />
-                                        <label className="form-check-label" htmlFor="flexSwitchCheckDefault">
-                                            {isChecked ? 'On' : 'Off'}
+                                        <input
+                                            className="form-check-input"
+                                            type="checkbox"
+                                            role="switch"
+                                            id={`flexSwitchCheckDefault-${ad._id}`}
+                                            checked={ad.paynow === 1}
+                                            onChange={() => handleToggle(ad._id)}
+                                            disabled={ad.paynow === 1} // Disable if paynow is true
+                                        />
+                                        <label className="form-check-label" htmlFor={`flexSwitchCheckDefault-${ad._id}`}>
+                                            {ad.paynow === 1 ? 'On' : 'Off'}
                                         </label>
                                     </div>
                                     <div className='d-flex align-items-center gap-3 me-3'>
                                         <span>
-                                            <button className='btn btn-success'>Active</button>
+                                            <button
+                                                className='btn btn-success'
+                                                onClick={() => handleStatusActive(ad._id)}
+                                                disabled={ad.status === 'active'}
+                                            >
+                                                {ad.status === 'active' ? 'Activated' : 'Active'}
+                                            </button>
                                         </span>
                                     </div>
                                 </div>

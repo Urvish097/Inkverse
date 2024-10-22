@@ -13,7 +13,7 @@ import { Link } from 'react-router-dom';
 const Home = () => {
     const [posts, setPosts] = useState([]);
     const [showAll, setShowAll] = useState(false);
-
+    const [ads, setAds] = useState([]); // State to store advertisements
 
     useEffect(() => {
         const fetchPosts = async () => {
@@ -35,6 +35,25 @@ const Home = () => {
         fetchPosts();
     }, []);
 
+    useEffect(() => {
+        const fetchAds = async () => {
+            try {
+                const response = await fetch('http://localhost:5000/user/showAd', {
+                    method: 'GET'
+                });
+                const data = await response.json();
+                if (data.success) {
+                    setAds(data.data);
+                } else {
+                    console.error('Failed to fetch ads:', data.message);
+                }
+            } catch (error) {
+                console.error('Error fetching ads:', error);
+            }
+        };
+
+        fetchAds();
+    }, []);
     const [selectedCategory, setSelectedCategory] = useState("Business");
     const [categoryData, setCategoryData] = useState([]);
 
@@ -159,30 +178,23 @@ const Home = () => {
                 </div>
             </section>
 
+            {/* Advertisement Slider */}
             <section className='advertisement-section mb-3'>
                 <div className='container'>
                     <Slider {...settings} className='advertisement-slider mb-3'>
-                        <div className='slide'>
-                            <img
-                                className='advertisement-image'
-                                src="https://i.ytimg.com/vi/tYcxuRZfB0g/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLB0oZUmYfpDp5MR3w1hkVKVLJzfqA"
-                                alt="Advertisement 1"
-                            />
-                        </div>
-                        <div className='slide'>
-                            <img
-                                className='advertisement-image'
-                                src="https://rukminim2.flixcart.com/image/720/864/km0x5zk0/board-game/s/7/9/ww-challengers-raw-deal-travel-board-game-holiday-game-great-for-original-imagfysdvn5xyqkh.jpeg?q=60&crop=false"
-                                alt="Advertisement 2"
-                            />
-                        </div>
-                        <div className='slide'>
-                            <img
-                                className='advertisement-image'
-                                src="https://media.licdn.com/dms/image/v2/D5622AQH6jilI799vOw/feedshare-shrink_800/feedshare-shrink_800/0/1712901058383?e=2147483647&v=beta&t=F9H8AQFOaUNbv7AlleGr53vEVfaOQN1tvtOs8oQl3DM"
-                                alt="Advertisement 3"
-                            />
-                        </div>
+                        {ads && ads.length > 0 ? (
+                            ads.map((ad, index) => (
+                                <div className='slide' key={index}>
+                                    <img
+                                        className='advertisement-image'
+                                        src={ad.poster}
+                                        alt={ad.title}
+                                    />
+                                </div>
+                            ))
+                        ) : (
+                            <div>No advertisements available</div>
+                        )}
                     </Slider>
                     <div className='text-center'>
                         <Link className='btn btn-primary btn-lg' to={"/Advertisement"}>Advertise Now</Link>
@@ -196,7 +208,7 @@ const Home = () => {
                     <p className='Europa_Bold fw-medium mb-5'>Tick one more destination off of your bucket list with one of our most popular vacation in 2022</p>
                     <div className='row justify-content-center'>
                         {Destination.map((item) => (
-                            <div className='col mb-3'>
+                            <div className='col mb-3' key={item.id}>
                                 <div>
                                     <Descard Des={item} />
                                 </div>
@@ -206,6 +218,7 @@ const Home = () => {
                 </div>
             </section>
 
+            {/* Category Section */}
             <section className='sec-5'>
                 <div className="container">
                     <div className="category">
@@ -317,9 +330,8 @@ const Home = () => {
                             </p>
                         )}
                     </div>
-                </div>
-            </section>
-
+                </div >
+            </section >
         </>
     );
 };
