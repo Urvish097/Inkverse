@@ -38,7 +38,7 @@ const Home = () => {
     useEffect(() => {
         const fetchAds = async () => {
             try {
-                const response = await fetch('http://localhost:5000/user/showAd', {
+                const response = await fetch(`${BaseUrl}/user/showAd`, {
                     method: 'GET'
                 });
                 const data = await response.json();
