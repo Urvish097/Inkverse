@@ -4,7 +4,7 @@ import "./Profile.css";
 import { CiShare2 } from 'react-icons/ci';
 import Postcard from '../../Cards/Card/Postcard';
 // import { Post } from '../../Data/Data';
-import { useParams } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { BaseUrl } from '../../services/Url';
 
 
@@ -19,6 +19,8 @@ const Profile = () => {
     };
     const { blogId } = useParams();
 
+    const Navigate = useNavigate()
+
     useEffect(() => {
         const fetchPosts = async () => {
             try {
@@ -29,6 +31,15 @@ const Profile = () => {
                     }
                 });
                 const data = await response.json();
+                if (response.ok) {
+                    console.log("ok");
+                }
+                else {
+                    if (data.message === "TokenExpiredError: jwt expired") {
+                        localStorage.clear()
+                        Navigate('/login')
+                    }
+                }
                 setBlog(data.data)
             } catch (error) {
                 console.error('Error fetching blogs:', error);

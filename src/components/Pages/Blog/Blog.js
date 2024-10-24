@@ -18,7 +18,7 @@ const Blog = () => {
 
     useEffect(() => {
         const fetchBlogs = async () => {
-            setIsFetching(true); // Start loading
+            setIsFetching(true);
             try {
                 const response = await fetch(`${BaseUrl}/user/userpost/${userId}`, {
                     method: "GET",
@@ -26,29 +26,32 @@ const Blog = () => {
                         authorization: `Bearer ${token}`,
                     },
                 });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                const data = await response.json();
+                if (response.ok) {
+                    setBlogs(data.data);
+                }
+                else {
+                    console.log('=========>data.message', data.message);
+                    if (data.message === "TokenExpiredError: jwt expired") {
+                        localStorage.clear()
+                        navigate('/login')
+                    }
                 }
 
-                const data = await response.json();
-                setBlogs(data.data);
             } catch (error) {
                 console.error("Error fetching blogs:", error);
             } finally {
-                setIsFetching(false); // Stop loading
+                setIsFetching(false);
             }
         };
         fetchBlogs();
     }, [userId, token]);
 
-    // Handle search functionality from BlogHead component
     const handleSearch = async (searchValue) => {
 
         if (!searchValue) {
-            // If search value is empty, fetch all blogs again
             const fetchBlogs = async () => {
-                setIsFetching(true); // Start loading
+                setIsFetching(true);
                 try {
                     const response = await fetch(`${BaseUrl}/user/userpost/${userId}`, {
                         method: "GET",
@@ -60,20 +63,19 @@ const Blog = () => {
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
                     }
-
                     const data = await response.json();
                     setBlogs(data.data);
                 } catch (error) {
                     console.error("Error fetching blogs:", error);
                 } finally {
-                    setIsFetching(false); // Stop loading
+                    setIsFetching(false);
                 }
             };
             fetchBlogs();
             return;
         }
 
-        setIsFetching(true); // Start loading
+        setIsFetching(true);
         try {
             const response = await fetch(`${BaseUrl}/user/find/blog?title=${searchValue}&userId=${userId}`, {
                 method: "GET",

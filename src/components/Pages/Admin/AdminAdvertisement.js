@@ -112,8 +112,8 @@ const AdminAdvertisement = () => {
                                         <div>
                                             <p className='blog-name mb-2'>{ad.title}</p>
                                             <div className='ad-profile-img-main d-flex align-items-center gap-2'>
-                                                <img className='ad-profile-img' src={ad.userId.profile} alt="" />
-                                                <p className='mb-0'>{ad.userId.email}</p>
+                                                <img className='ad-profile-img' src={ad.userId?.profile} alt="" />
+                                                <p className='mb-0'>{ad.userId?.email}</p>
                                             </div>
                                         </div>
                                     </div>

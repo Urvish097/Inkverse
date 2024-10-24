@@ -23,31 +23,32 @@ import AdminView from './components/Pages/Admin/AdminView';
 import AdminLogin from './components/Pages/Admin/AdminLogin';
 import Advertisement from './components/Pages/Advertisement/Advertisement';
 import AdminAdvertisement from './components/Pages/Admin/AdminAdvertisement';
+import { ToastContainer } from 'react-toastify';
 
 function App() {
 
-  useEffect(() => {
-    const disableRightClick = (e) => {
-      e.preventDefault();
-    };
+  // useEffect(() => {
+  //   const disableRightClick = (e) => {
+  //     e.preventDefault();
+  //   };
 
-    const disableDevTools = (e) => {
-      if (e.keyCode === 123) {
-        e.preventDefault();
-      }
-      if (e.ctrlKey && e.shiftKey && e.keyCode === 73) {
-        e.preventDefault();
-      }
-    };
+  //   const disableDevTools = (e) => {
+  //     if (e.keyCode === 123) {
+  //       e.preventDefault();
+  //     }
+  //     if (e.ctrlKey && e.shiftKey && e.keyCode === 73) {
+  //       e.preventDefault();
+  //     }
+  //   };
 
-    document.addEventListener('contextmenu', disableRightClick);
-    document.addEventListener('keydown', disableDevTools);
+  //   document.addEventListener('contextmenu', disableRightClick);
+  //   document.addEventListener('keydown', disableDevTools);
 
-    return () => {
-      document.removeEventListener('contextmenu', disableRightClick);
-      document.removeEventListener('keydown', disableDevTools);
-    };
-  }, []);
+  //   return () => {
+  //     document.removeEventListener('contextmenu', disableRightClick);
+  //     document.removeEventListener('keydown', disableDevTools);
+  //   };
+  // }, []);
 
   return (
     <BrowserRouter>
@@ -106,6 +107,8 @@ function ContentWithFooter() {
           <Route path='/Newpassword/:userId' element={<NewPassword />} />
         </Route>
       </Routes>
+      <ToastContainer />
+
       {shouldShowFooter && <Footer />}
     </>
   );

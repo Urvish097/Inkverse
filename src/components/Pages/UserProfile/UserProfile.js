@@ -28,6 +28,10 @@ const UserProfile = () => {
                     setUserData(data.data);
                 } else {
                     console.error('Error fetching profile data:', data.message);
+                    if (data.message === "TokenExpiredError: jwt expired") {
+                        localStorage.clear()
+                        navigate('/login')
+                    }
                 }
             } catch (error) {
                 console.error('Fetch error:', error);

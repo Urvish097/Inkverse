@@ -171,8 +171,8 @@ const Advertisement = () => {
                 setPoster(null);
                 setDuration('7 days');
                 setPrice(999);
-
                 handleCloseModal();
+                fetchAds();
             } else {
                 toast.error(data.message || 'Failed to add advertisement');
             }
@@ -249,7 +249,6 @@ const Advertisement = () => {
                         <button className='btn btn-success' onClick={() => handleClickfilter('active')}>Active</button>
                         <button className='btn btn-success'>Invoice</button>
                     </div>
-
 
                     {ads.length === 0 ? (
                         <h3 className='text-center'>No advertisements found.</h3>

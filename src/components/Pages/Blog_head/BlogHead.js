@@ -33,8 +33,6 @@ const BlogHead = ({ onSearch, display }) => {
         });
 
         const data = await response.json();
-        console.log(data.data, ">>>>>>>>data");
-
         if (response.ok) {
           setUserData(data.data);
         } else {

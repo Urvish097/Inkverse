@@ -27,7 +27,7 @@ const Header = (props) => {
             <nav className="navbar navbar-expand-lg" style={{ backgroundColor: props.bg }}>
                 <div className="container-lg container-fluid">
                     <Link className="navbar-brand"><img src={logo} className='logo' alt="Logo" style={{ height: props.logo }} /></Link>
-                    <button className="navbar-toggler bg-white btn menu-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+                    <button className="navbar-toggler bg-white  menu-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
                         <span className="navbar-toggler-text inter fw-bold text-black">Menu</span>
                     </button>
                     <div className="offcanvas offcanvas-start bg-black" tabIndex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
@@ -51,7 +51,6 @@ const Header = (props) => {
                     </div>
                 </div>
             </nav>
-            <ToastContainer />
         </>
     );
 }

@@ -4,6 +4,7 @@ import ReactApexChart from 'react-apexcharts';
 import './Admin.css';
 import AdminHeader from './AdminHeader';
 import { BaseUrl } from '../../services/Url';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const ApexChart = ({ blogData }) => {
     const chartOptions = {
@@ -117,25 +118,20 @@ const ApexChartEarnings = ({ earningData }) => {
         options: {
             chart: {
                 height: 350,
-                type: 'bar',
+                type: 'area',
                 toolbar: {
                     show: false,
                 },
             },
-            plotOptions: {
-                bar: {
-                    borderRadius: 10,
-                    dataLabels: {
-                        position: 'top',
-                    },
-                },
+            stroke: {
+                curve: 'smooth',
             },
             dataLabels: {
                 enabled: true,
                 formatter: function (val) {
                     return `$${val}`;
                 },
-                offsetY: -20,
+                offsetY: -5,
                 style: {
                     fontSize: '12px',
                     colors: ['#304758'],
@@ -153,31 +149,25 @@ const ApexChartEarnings = ({ earningData }) => {
                 axisTicks: {
                     show: false,
                 },
-                crosshairs: {
-                    fill: {
-                        type: 'gradient',
-                        gradient: {
-                            colorFrom: '#D8E3F0',
-                            colorTo: '#BED1E6',
-                            stops: [0, 100],
-                            opacityFrom: 0.4,
-                            opacityTo: 0.5,
-                        },
-                    },
-                },
-                tooltip: {
-                    enabled: true,
-                },
             },
             yaxis: {
-                axisBorder: {
-                    show: false,
-                },
-                axisTicks: {
-                    show: false,
-                },
                 labels: {
-                    show: false,
+                    formatter: function (val) {
+                        return `$${val}`;
+                    },
+                },
+            },
+            fill: {
+                type: 'gradient',
+                gradient: {
+                    shadeIntensity: 1,
+                    opacityFrom: 0.7,
+                    opacityTo: 0.9,
+                },
+            },
+            tooltip: {
+                enabled: true,
+                y: {
                     formatter: function (val) {
                         return `$${val}`;
                     },
@@ -193,19 +183,18 @@ const ApexChartEarnings = ({ earningData }) => {
                 },
             },
         },
-    };
-
+    }
     return (
         <div className="chart-container">
             <ReactApexChart
                 options={chartOptions.options}
                 series={chartOptions.series}
-                type="bar"
+                type="area"
                 height={350}
             />
         </div>
     );
-};
+}
 
 const Admin = () => {
     const [totalUsers, setTotalUsers] = useState(0);
@@ -216,6 +205,8 @@ const Admin = () => {
     const [loading, setLoading] = useState(true);
     const [monthlyBlogData, setMonthlyBlogData] = useState([]);
     const [monthlyEarnings, setMonthlyEarnings] = useState([]);
+
+    const Navigate = useNavigate()
 
     // Fetch dashboard data
     useEffect(() => {
@@ -229,18 +220,24 @@ const Admin = () => {
                     },
                 });
 
-                if (!dashboardResponse.ok) {
-                    throw new Error(`HTTP error! status: ${dashboardResponse.status}`);
-                }
-
                 const dashboardData = await dashboardResponse.json();
 
-                if (dashboardData.success) {
+                console.log(dashboardData, "========>dashboardData");
+                if (dashboardResponse.ok) {
                     setTotalUsers(dashboardData.data.TotalUser || 0);
                     setTotalBlogs(dashboardData.data.TotalBlog || 0);
                     setTotalAds(dashboardData.data.TotalAds || 0);
                     setTotalEarning(dashboardData.data.Earning || 0);
+                    // throw new Error(`HTTP error! status: ${dashboardResponse.status}`);
                 }
+                else {
+                    if (dashboardData.message === "TokenExpiredError: jwt expired") {
+                        localStorage.clear()
+                        Navigate('/adminlogin')
+                    }
+                }
+                // if (dashboardData.success) {
+                // }
             } catch (error) {
                 console.error('Error fetching dashboard data:', error);
             }
@@ -299,6 +296,7 @@ const Admin = () => {
                 if (earningData.success) {
                     setMonthlyEarnings(earningData.monthlyEarnings);
                 }
+
             } catch (error) {
                 console.error('Error fetching earning chart data:', error);
             }
@@ -371,6 +369,7 @@ const Admin = () => {
                 </div>
             </main>
         </section>
+        
     );
 };
 

@@ -57,16 +57,14 @@ const SignUp = () => {
         try {
             const response = await fetch(`${BaseUrl}/user/user-signup`, {
                 method: "POST",
-                body: formdata,  
+                body: formdata,
             });
 
             const data = await response.json();
 
             if (response.ok && data.message === "USER SIGNUP SUCCESSFUL") {
-                toast.success("Signup successful! Redirecting...");
-                setTimeout(() => {
-                    navigate("/Login");
-                }, 2000);
+                navigate("/Login");
+                toast.success("Signup successful! Redirecting...")
             } else {
                 toast.error(data.message || "Signup failed. Please try again.");
             }
@@ -79,8 +77,6 @@ const SignUp = () => {
 
     return (
         <>
-            <ToastContainer />
-
             {isLoading && (
                 <div className="loader-container">
                     <div className="loader"></div>

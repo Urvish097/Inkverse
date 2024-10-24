@@ -41,12 +41,11 @@ const Login = () => {
                 localStorage.setItem("token", data.Token);
                 localStorage.setItem("profile", data.data.profile)
                 localStorage.setItem("username", data.data.username)
-                localStorage.setItem("userId",data.data._id)
-                localStorage.setItem("status",data.data.status)
+                localStorage.setItem("userId", data.data._id)
+                localStorage.setItem("status", data.data.status)
+                navigate('/');
                 toast.success("Login successful!");
-                setTimeout(() => {
-                    navigate('/'); 
-                }, 2000); 
+
             } else {
                 toast.error(data.message || "Login failed. Please try again.");
             }
@@ -57,7 +56,6 @@ const Login = () => {
 
     return (
         <>
-            <ToastContainer />
             <section className='login'>
                 <div className='row m-0 bg'>
                     <div className='col-lg-6'>
@@ -99,7 +97,7 @@ const Login = () => {
                                             Login
                                         </button>
                                     </div>
-                                        <Link to={"/Email"} className='mb-0 text-center d-flex justify-content-center mb-3 text-decoration-none'>Forget Password?</Link>
+                                    <Link to={"/Email"} className='mb-0 text-center d-flex justify-content-center mb-3 text-decoration-none'>Forget Password?</Link>
                                 </form>
                                 <div>
                                     <p className='inter fw-medium text-center'>Don't have an account?{" "}

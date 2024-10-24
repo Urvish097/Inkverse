@@ -28,7 +28,7 @@ const CreateBlog = () => {
 
     // Initialize additional images preview if editing
     useEffect(() => {
-        if (blogToEdit?.additionalimg) {    
+        if (blogToEdit?.additionalimg) {
             setAdditionalImagesPreview(blogToEdit.additionalimg);
         }
     }, [blogToEdit]);
@@ -124,8 +124,8 @@ const CreateBlog = () => {
 
             // Handle the response based on success or error
             if (response.ok) {
+                navigate('/blog')
                 toast.success(data.message, { position: "top-right" });
-                setTimeout(() => navigate('/'), 1000);
             } else {
                 toast.error(data.message, { position: "top-right" });
             }
@@ -262,9 +262,9 @@ const CreateBlog = () => {
                                 accept="image/*"
                                 onChange={handleMainImageChange}
                             />
-                        
+
                         </div>
-                        
+
                         {/* Additional Images Upload */}
                         <div className="mb-3">
                             <label htmlFor="additionalimg" className="form-label">Additional Images</label>
@@ -277,7 +277,7 @@ const CreateBlog = () => {
                                 multiple
                                 onChange={handleAdditionalImagesChange}
                             />
-                           
+
                         </div>
 
                         {/* Submit Button */}
@@ -289,9 +289,6 @@ const CreateBlog = () => {
                     </form>
                 </div>
             </div>
-
-            {/* Toast Notifications */}
-            <ToastContainer />
         </section>
     );
 };

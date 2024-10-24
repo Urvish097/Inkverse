@@ -39,10 +39,8 @@ const AdminLogin = () => {
 
             if (response.ok && data.message === "Admin LOGIN SUCSSEFULYY") {
                 localStorage.setItem("admintoken", data.Token);
+                navigate('/adminpanel');
                 toast.success("Login successful!");
-                setTimeout(() => {
-                    navigate('/adminpanel');
-                }, 2000);
             } else {
                 toast.error(data.message || "Login failed. Please try again.");
             }
@@ -53,7 +51,6 @@ const AdminLogin = () => {
 
     return (
         <>
-            <ToastContainer />
             <section className='login'>
                 <div className='row m-0 bg'>
                     <div className='col-lg-6'>

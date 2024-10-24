@@ -31,8 +31,8 @@ const UpdateProfile = () => {
         setLoading(true); // Set loading to true before the API call
 
         const { fname, username, email, profile } = formData;
-        const userId = user._id; 
-        const token = localStorage.getItem('token'); 
+        const userId = user._id;
+        const token = localStorage.getItem('token');
 
         const updatedProfileData = new FormData();
         updatedProfileData.append('fname', fname);
@@ -52,10 +52,8 @@ const UpdateProfile = () => {
             });
 
             if (response.ok) {
+                navigate('/UserProfile');
                 toast.success('Profile updated successfully!');
-                setTimeout(() => {
-                    navigate('/UserProfile');
-                }, 2000);
             } else {
                 const errorData = await response.json();
                 toast.error(errorData.message || 'Failed to update profile.');
@@ -160,7 +158,6 @@ const UpdateProfile = () => {
                     </div>
                 </div>
             </section>
-            <ToastContainer />
             <style>{`
                 .simple-loader {
                     border: 5px solid #f3f3f3; /* Light grey */
