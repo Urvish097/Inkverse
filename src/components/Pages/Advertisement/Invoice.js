@@ -97,6 +97,14 @@ const Invoice = () => {
                                 <th>Price</th>
                                 <td>₹{invoiceData.price}</td>
                             </tr>
+                            <tr>
+                                <th>Order Date</th>
+                                <td>{new Date(paymentDetails.created_at).toLocaleDateString()}</td>
+                            </tr>
+                            <tr>
+                                <th>Expiry Date:</th>
+                                <td>{new Date(invoiceData.lastTime).toLocaleDateString()}</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
