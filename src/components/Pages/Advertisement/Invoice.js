@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './invoice.css';
 import { useParams } from 'react-router-dom';
+import { BaseUrl } from '../../services/Url';
 
 const Invoice = () => {
     const [invoiceData, setInvoiceData] = useState(null);
@@ -13,7 +14,7 @@ const Invoice = () => {
     useEffect(() => {
         const fetchInvoice = async () => {
             try {
-                const response = await fetch(`http://localhost:5000/invoice/${adId}`);
+                const response = await fetch(`${BaseUrl}/invoice/${adId}`);
 
                 if (!response.ok) {
                     throw new Error('Failed to fetch invoice');
