@@ -3,11 +3,14 @@ import AdminHeader from './AdminHeader';
 import { GoDotFill } from "react-icons/go";
 import "./AdminAdvertisement.css";
 import { BaseUrl } from '../../services/Url';
+import { useNavigate } from 'react-router-dom';
 
 const AdminAdvertisement = () => {
     const [ads, setAds] = useState([]);
+    const [loading, setLoading] = useState({});
 
-    // Fetch ads data from the API with token
+    const navigate = useNavigate();
+
     useEffect(() => {
         const fetchAds = async () => {
             try {
@@ -26,6 +29,10 @@ const AdminAdvertisement = () => {
                     setAds(result.data);
                 } else {
                     console.error(result.message);
+                    if (result.message === "TokenExpiredError: jwt expired") {
+                        localStorage.clear();
+                        navigate('/adminlogin');
+                    }
                 }
             } catch (error) {
                 console.error('Error fetching ads:', error);
@@ -35,8 +42,9 @@ const AdminAdvertisement = () => {
         fetchAds();
     }, []);
 
-    // Handle toggle switch
     const handleToggle = async (adId) => {
+        setLoading((prev) => ({ ...prev, [adId]: true }));
+
         try {
             const token = localStorage.getItem('admintoken');
             const response = await fetch(`${BaseUrl}/admin/enableForPayment/${adId}`, {
@@ -50,9 +58,8 @@ const AdminAdvertisement = () => {
             const result = await response.json();
 
             if (result.success) {
-                // Update the ad's state to disable the toggle
-                setAds(prevAds =>
-                    prevAds.map(ad =>
+                setAds((prevAds) =>
+                    prevAds.map((ad) =>
                         ad._id === adId ? { ...ad, paynow: 1 } : ad
                     )
                 );
@@ -61,10 +68,11 @@ const AdminAdvertisement = () => {
             }
         } catch (error) {
             console.error('Error enabling payment:', error);
+        } finally {
+            setLoading((prev) => ({ ...prev, [adId]: false }));
         }
     };
 
-    // Handle Active button click to activate ad status
     const handleStatusActive = async (adId) => {
         try {
             const token = localStorage.getItem('admintoken');
@@ -79,9 +87,8 @@ const AdminAdvertisement = () => {
             const result = await response.json();
 
             if (result.success) {
-                // Update the ad's status to "active" and disable the button
-                setAds(prevAds =>
-                    prevAds.map(ad =>
+                setAds((prevAds) =>
+                    prevAds.map((ad) =>
                         ad._id === adId ? { ...ad, status: 'active' } : ad
                     )
                 );
@@ -131,10 +138,12 @@ const AdminAdvertisement = () => {
                                             id={`flexSwitchCheckDefault-${ad._id}`}
                                             checked={ad.paynow === 1}
                                             onChange={() => handleToggle(ad._id)}
-                                            disabled={ad.paynow === 1} // Disable if paynow is true
+                                            disabled={ad.paynow === 1 || loading[ad._id]}
                                         />
                                         <label className="form-check-label" htmlFor={`flexSwitchCheckDefault-${ad._id}`}>
-                                            {ad.paynow === 1 ? 'On' : 'Off'}
+                                            {loading[ad._id] ? (
+                                                <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                            ) : ad.paynow === 1 ? 'On' : 'Off'}
                                         </label>
                                     </div>
                                     <div className='d-flex align-items-center gap-3 me-3'>

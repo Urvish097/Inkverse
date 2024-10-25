@@ -24,6 +24,7 @@ import AdminLogin from './components/Pages/Admin/AdminLogin';
 import Advertisement from './components/Pages/Advertisement/Advertisement';
 import AdminAdvertisement from './components/Pages/Admin/AdminAdvertisement';
 import { ToastContainer } from 'react-toastify';
+import Invoice from './components/Pages/Advertisement/Invoice';
 
 function App() {
 
@@ -87,6 +88,7 @@ function ContentWithFooter() {
         <Route path='/Register' element={<SignUp />} />
         <Route path='/Email' element={<Email />} />
         <Route path='/AdminAdvertisement' element={<AdminAdvertisement />} />
+        <Route path='/invoice/:adId' element={<Invoice />} />
         <Route element={<AdminPrivateRoute />}>
           <Route path='/AdminPanel' element={<Admin />} />
           <Route path='/Adminpost' element={<AdminPost />} />

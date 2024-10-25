@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import AdminHeader from './AdminHeader';
 import { BaseUrl } from '../../services/Url';
 import { MdDelete } from "react-icons/md";
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import './AdminPost.css';
 import debounce from 'lodash.debounce'; // Ensure lodash.debounce is installed
 import { FaEye } from 'react-icons/fa';
@@ -14,6 +14,8 @@ const AdminPost = () => {
     const [searchValue, setSearchValue] = useState('');
     const userId = localStorage.getItem('userId');
     const token = localStorage.getItem("admintoken");
+
+    const Navigate = useParams()
 
     const fetchAllBlogs = async () => {
         setIsFetching(true);
@@ -30,7 +32,15 @@ const AdminPost = () => {
             }
 
             const data = await response.json();
-            setBlogs(data.data);
+            if (data.success) {
+                setBlogs(data.data);
+            }
+            else {
+                if (data.message === "TokenExpiredError: jwt expired") {
+                    localStorage.clear()
+                    Navigate('/adminlogin')
+                }
+            }
         } catch (error) {
             console.error("Error fetching blogs:", error);
             // Optionally, set an error state here to display to the user
@@ -39,7 +49,6 @@ const AdminPost = () => {
         }
     };
 
-    // Function to search blogs by title
     const searchBlogs = async (query) => {
         if (!query) {
             fetchAllBlogs();
@@ -62,7 +71,7 @@ const AdminPost = () => {
             const data = await response.json();
             if (data.success) {
                 setBlogs(data.data);
-                console.log(data.data,"==========>data");
+                console.log(data.data, "==========>data");
             } else {
                 setBlogs([]); // Or handle according to your API's response structure
             }

@@ -81,7 +81,6 @@ const AdminUser = () => {
         fetchUsers();
     }, []);
 
-    // Handler for search input
     const handleSearch = async (e) => {
         const query = e.target.value;
         setSearchTerm(query);

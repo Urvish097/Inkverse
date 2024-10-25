@@ -3,12 +3,16 @@ import "./Admin.css";
 import Logo from '../../Images/Logo.png';
 import { IoHomeSharp } from 'react-icons/io5';
 import { FaUsers, FaNewspaper, FaSignOutAlt } from 'react-icons/fa';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { RiAdvertisementFill } from "react-icons/ri";
 
 const AdminHeader = () => {
+
+    const Navigate = useNavigate()
+
     const handleLogout = () => {
         localStorage.removeItem("admintoken")
+        Navigate("/adminlogin")
     };
 
     return (

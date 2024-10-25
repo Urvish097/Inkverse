@@ -4,19 +4,25 @@ import './Advertisement.css';
 import { toast, ToastContainer } from 'react-toastify';
 import { load } from '@cashfreepayments/cashfree-js';
 import { BaseUrl } from '../../services/Url';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Advertisement = () => {
     const [showModal, setShowModal] = useState(false);
     const [price, setPrice] = useState(999);
-    const [duration, setDuration] = useState('7 days');
+    const [duration, setDuration] = useState('7');
     const [title, setTitle] = useState('');
     const [phone, setphone] = useState('')
     const [poster, setPoster] = useState(null);
     const [loading, setLoading] = useState(false);
     const [ads, setAds] = useState([]);
+    const [invoiceall, setInvoiceAll] = useState([]);
+    const [showInvoice, setShowInvoice] = useState(false);
+    const [view, setView] = useState('adsss');
     const [disable, setDisable] = useState(0);
     const [cashfree, setCashfree] = useState(null);
     const [currentFilter, setCurrentFilter] = useState('all');
+
+    const Navigate = useNavigate()
 
     const userId = localStorage.getItem('userId');
     let orderId = "";
@@ -60,10 +66,10 @@ const Advertisement = () => {
                 const data = await res.json();
                 console.log(data, ">>>>>>>>data");
 
-                if (data) {
+                if (data.data.order_status === "PAID") {
                     alert("Payment verified");
-                    fetchAds()
                 }
+                fetchAds()
             } else {
                 console.log("Error:", res.statusText);
             }
@@ -118,12 +124,45 @@ const Advertisement = () => {
                 setDisable(data.data.paynow);
             } else {
                 toast.error(data.message || 'Failed to fetch advertisements');
+                if (data.message === "TokenExpiredError: jwt expired") {
+                    localStorage.clear()
+                    Navigate('/login')
+                }
             }
         } catch (error) {
             toast.error('Something went wrong while fetching ads');
         } finally {
             setLoading(false);
         }
+    };
+
+    const invoice = async () => {
+        setLoading(true);
+        try {
+            const response = await fetch(`${BaseUrl}/getall/invoice/${userId}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                },
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                setInvoiceAll(data.data);
+                setShowInvoice(true);
+            } else {
+                toast.error(data.message || 'Failed to fetch invoices');
+            }
+        } catch (error) {
+            toast.error('Something went wrong while fetching invoices');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const toggleInvoices = () => {
+        setView('invoices');
+        invoice();
     };
 
     useEffect(() => {
@@ -169,7 +208,7 @@ const Advertisement = () => {
                 toast.success('Advertisement added successfully');
                 setTitle('');
                 setPoster(null);
-                setDuration('7 days');
+                setDuration('7');
                 setPrice(999);
                 handleCloseModal();
                 fetchAds();
@@ -187,11 +226,11 @@ const Advertisement = () => {
         const selectedDuration = e.target.value;
         setDuration(selectedDuration);
 
-        if (selectedDuration === '7 days') {
+        if (selectedDuration === '7') {
             setPrice(999);
-        } else if (selectedDuration === '15 days') {
+        } else if (selectedDuration === '15') {
             setPrice(1899);
-        } else if (selectedDuration === '30 days') {
+        } else if (selectedDuration === '30') {
             setPrice(3799);
         }
     };
@@ -199,7 +238,7 @@ const Advertisement = () => {
     const fetchFilteredAds = async (filter) => {
         setLoading(true);
         try {
-            const response = await fetch(`${BaseUrl}/user/adFilter`, {
+            const response = await fetch(`${BaseUrl}/user/adFilter/${userId}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -209,7 +248,6 @@ const Advertisement = () => {
             const data = await response.json();
 
             if (response.ok) {
-                // Filter ads based on the selected filter
                 const filteredAds = filter === 'active' ? data.data.active : filter === 'pending' ? data.data.pending : data.data;
                 setAds(filteredAds);
             } else {
@@ -225,6 +263,7 @@ const Advertisement = () => {
     const handleClickfilter = (filter) => {
         setCurrentFilter(filter);
         fetchFilteredAds(filter);
+        setView('adsss');
     };
 
     return (
@@ -232,6 +271,7 @@ const Advertisement = () => {
             <div className='mb-5'>
                 <BlogHead display={"none"} />
             </div>
+
             <section className='Blog'>
                 <div className='container mb-4'>
                     <div className='d-flex justify-content-between align-items-center mb-5'>
@@ -247,12 +287,12 @@ const Advertisement = () => {
                     <div className='d-flex gap-3 mb-5'>
                         <button className='btn btn-warning' onClick={() => handleClickfilter('pending')}>Pending</button>
                         <button className='btn btn-success' onClick={() => handleClickfilter('active')}>Active</button>
-                        <button className='btn btn-success'>Invoice</button>
+                        <button className='btn btn-success' onClick={toggleInvoices}>Invoice</button>
                     </div>
 
-                    {ads.length === 0 ? (
+                    {view === 'adsss' && ads.length === 0 ? (
                         <h3 className='text-center'>No advertisements found.</h3>
-                    ) : (
+                    ) : view === 'adsss' ? (
                         ads.map((ad) => (
                             <div className='blog-main mb-4' key={ad._id}>
                                 <div className='d-flex justify-content-md-between flex-wrap align-items-center'>
@@ -283,7 +323,37 @@ const Advertisement = () => {
                                 </div>
                             </div>
                         ))
-                    )}
+                    ) : null}
+
+                    {view === 'invoices' && invoiceall.length === 0 ? (
+                        <h3 className='text-center'>No Invoice found.</h3>
+                    ) : view === 'invoices' ? (
+                        invoiceall.map((invoiceItem) => (
+                            <div className='blog-main mb-4' key={invoiceItem._id}>
+                                <div className='d-flex justify-content-md-between flex-wrap align-items-center'>
+                                    <div className='d-flex gap-4 align-items-center'>
+                                        <div className='title'>
+                                            <img
+                                                src={invoiceItem.poster || "default-image-url"}
+                                                className='Blog-title-image'
+                                                alt="Advertisement"
+                                            />
+                                        </div>
+                                        <div>
+                                            <p className='blog-name mb-1'>{invoiceItem.title}</p>
+                                            <p className='blog-publish mb-0'>Price : {invoiceItem.price}</p>
+                                            <p className='blog-publish mb-0'>phone : {invoiceItem.phone}</p>
+                                        </div>
+                                    </div>
+                                    <div className='d-flex align-items-center gap-3'>
+                                        <Link to={`/invoice/${invoiceItem._id}`}>
+                                            <button className='btn btn-success' >Download Invoice</button>
+                                        </Link>
+                                    </div>
+                                </div>
+                            </div>
+                        ))
+                    ) : null}
                 </div>
             </section>
 
@@ -343,9 +413,9 @@ const Advertisement = () => {
                                     required
                                     className="form-select"
                                 >
-                                    <option value="7 days">7 days</option>
-                                    <option value="15 days">15 days</option>
-                                    <option value="30 days">30 days</option>
+                                    <option value="7">7 days</option>
+                                    <option value="15">15 days</option>
+                                    <option value="30">30 days</option>
                                 </select>
                             </div>
                             <div className="form-group">
@@ -360,7 +430,11 @@ const Advertisement = () => {
                                 />
                             </div>
                             <div className="modal-actions d-flex justify-content-between">
-                                <button type="submit" className="btn btn-primary">
+                                <button
+                                    type="submit"
+                                    className="btn btn-primary"
+                                    disabled={loading}
+                                >
                                     {loading ? "Creating..." : "Create Advertisement"}
                                 </button>
                                 <button
@@ -375,7 +449,9 @@ const Advertisement = () => {
                     </div>
                 </div>
             )}
+
             <ToastContainer />
+
         </>
     );
 };
