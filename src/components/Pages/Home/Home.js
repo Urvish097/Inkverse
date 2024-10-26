@@ -147,13 +147,13 @@ const Home = () => {
             <section className='sec-2'>
                 <div className='container'>
                     <div className='row justify-content-center'>
-                        {posts.slice(0, showAll ? posts.length : 3).map((post, index) => (
+                        {posts.slice(0, showAll ? posts.length : 6).map((post, index) => (
                             <div className='col-lg-4 col-md-6' key={index}>
                                 <Postcard post={post} />
                             </div>
                         ))}
                     </div>
-                    {posts.length > 3 && (
+                    {posts.length > 6 && (
                         <div className='d-flex justify-content-center mt-3'>
                             <button className='load-btn Europa_Bold bg-white' onClick={handleToggle}>
                                 {showAll ? 'Show Less' : 'Load More'}

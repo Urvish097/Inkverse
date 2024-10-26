@@ -182,12 +182,14 @@ const Profile = () => {
                             ))}
                         </div>
                         <div className='d-flex justify-content-center'>
-                            <button
-                                className="load-btn europa_bold bg-white"
-                                onClick={handleToggle}
-                            >
-                                {showAll ? "Show Less" : "Load More"}
-                            </button>
+                            {posts.length > 3 && (
+                                <button
+                                    className="load-btn europa_bold bg-white"
+                                    onClick={handleToggle}
+                                >
+                                    {showAll ? "Show Less" : "Load More"}
+                                </button>
+                            )}
                         </div>
                     </div>
                 </div>
