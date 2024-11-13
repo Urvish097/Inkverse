@@ -85,7 +85,7 @@
     }
 
     .subscribe_btn {
-        top: 13%;
+        top: 254%;
         right: 1%;
     }
 
@@ -99,7 +99,7 @@
 @media (max-width:430px) {
     .subscribe_btn {
         top: 350%;
-        right: 30%;
+        right: 0%;
     }
 }
 
