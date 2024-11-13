@@ -79,7 +79,7 @@ const Profile = () => {
 
             <section>
                 <div className="container px-0">
-                    <div className="blogsingle_hero text-white p-sm-4 p-2 d-flex justify-content-sm-end justify-content-center flex-column" style={{ backgroundImage: `url(${Blog.blogimg})` }}>
+                    <div className="blogsingle_hero text-white p-sm-4 p-2 d-flex justify-content-sm-end justify-content-end flex-column" style={{ backgroundImage: `url(${Blog.blogimg})` }}>
                         <h1 className="europa_bold text-uppercase">
                             {Blog.title}
                         </h1>
