@@ -441,6 +441,7 @@ const Advertisement = () => {
                                     type="button"
                                     className="btn btn-secondary"
                                     onClick={handleCloseModal}
+                                    disabled={loading}
                                 >
                                     Cancel
                                 </button>
